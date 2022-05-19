@@ -1,4 +1,4 @@
-#!c:\users\vea\desktop\iplm-master\env\scripts\python.exe
+#!C:\Users\User\Desktop\iPLMMain\iPLMGit\env\Scripts\python.exe
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 
