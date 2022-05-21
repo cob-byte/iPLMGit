@@ -90,8 +90,8 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2',
-                       'firstName', 'middleName', 'lastName', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student'),
+            'fields': ('firstName', 'middleName', 'lastName', 'email', 'password1', 'password2',
+                        'is_admin', 'is_chairperson', 'is_faculty', 'is_student'),
         }),
     )
     search_fields = ('email',)
@@ -134,7 +134,7 @@ class ChairpersonInfoAdmin(admin.ModelAdmin):
 
 # FACULTY ADMIN
 class FacultyInfoAdmin(admin.ModelAdmin):
-    search_fields = ['facultyID', 'facultyUser__email', 'facultyUser__firstName', 'facultyUser__lastName','facultyUser__middleName']
+    search_fields = ['facultyUser__id', 'facultyUser__email', 'facultyUser__firstName', 'facultyUser__lastName','facultyUser__middleName']
     model = FacultyInfo
     list_display = ('get_id', 'get_email', 'get_lname', 'get_fname', 'get_mname')
 
@@ -373,7 +373,7 @@ admin.site.register(curriculumInfo, curriculumInfoAdmin)
 
 #STUDENT CHECKLIST AND GRADE
 class currchecklistAdmin(admin.ModelAdmin):
-    search_fields = ['owner__studentID']
+    search_fields = ['owner__studentID', 'curriculumCode__subjectCode__subjectName']
     model = currchecklist
     list_display = ('get_id','owner','curriculum','yearTaken','semTaken')
 
@@ -405,9 +405,9 @@ admin.site.register(currchecklist, currchecklistAdmin)
 
 #CRS GRADE FILE
 class crsGradeAdmin(admin.ModelAdmin):
-    search_fields = ['studentID__studentID']
+    search_fields = ['studentID__studentID', 'studentID__studentUser__firstName', 'studentID__studentUser__lastName']
     model = crsGrade
-    list_display = ('get_id','studentID','firstname','MiddleName','LastName','ApplicationStatus')
+    list_display = ('get_id','studentID','first_name','Middle_Name','Last_Name','Application_Status')
 
     def get_id(self, obj):
         return obj.id
@@ -415,16 +415,16 @@ class crsGradeAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def firstname(self, obj):
+    def first_name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
-        return obj.studentID.studentUser.middleName
+    def Last_Name(self, obj):
+        return obj.studentID.studentUser.lastName
 
-    def ApplicationStatus(self, obj):
+    def Application_Status(self, obj):
         return obj.remarks
 
     list_filter = [('studentID',RelatedDropdownFilter),('studentID__studentCourse',DropdownFilter),('remarks',DropdownFilter)]
@@ -479,7 +479,7 @@ admin.site.register(RoomInfo)
 
 # HD STUDENT APPLICANT
 class hdApplicantAdmin(admin.ModelAdmin):
-    search_fields = ['studentID__studentID']
+    search_fields = ['studentID__studentID', 'studentID__studentCourse', 'id', 'studentID__studentUser__firstName', 'studentID__studentUser__lastName']
     model = hdApplicant
     list_display = ('get_id','course','studentID','FirstName','MiddleName','LastName','status','Applicationstatus')
 
@@ -693,21 +693,21 @@ admin.site.register(FacultyApplicant),
 #STUDENT APPLICATION FORM FILL-UP
 class hdClearanceFormAdmin(admin.ModelAdmin):
     model = hdClearanceForm
-    list_display = ('get_id','studentID','firstname','MiddleName','LastName')
+    list_display = ('get_id','student_ID','first_name','Middle_Name','Last_Name')
 
     def get_id(self, obj):
         return obj.id
 
-    def studentID(self, obj):
+    def student_ID(self, obj):
         return obj.studentID
 
-    def firstname(self, obj):
+    def first_name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
+    def Last_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
     list_filter = [('studentID',DropdownFilter)]
@@ -792,7 +792,7 @@ admin.site.register(HD_DroppingForm)
 
 #Study Plan
 class CurriculaAdmin(admin.ModelAdmin):
-    search_fields = ['departmentID__courseName', 'cYear']
+    search_fields = ['departmentID__courseName', 'cYear', 'cSem', 'schoolYr']
 
 class courseListAdmin(admin.ModelAdmin):
     list_display = ['get_departmentID', 'courseCode', 'courseName', 'courseUnit', 'prerequisite', 'counted_in_GWA']

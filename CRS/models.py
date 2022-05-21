@@ -71,7 +71,7 @@ class User(AbstractBaseUser):
     )
     
     firstName = models.CharField(max_length=100)
-    middleName = models.CharField(max_length=100, blank=True, default=" ")
+    middleName = models.CharField(max_length=100, blank=True, default=" ", verbose_name="Middle Name")
     lastName = models.CharField(max_length=100)
 
     is_active = models.BooleanField(default=True)
@@ -132,7 +132,7 @@ class AcademicYearInfo(models.Model):
 
 # ------------------ Chairperson Database----------------------------------------------------
 class ChairpersonInfo (models.Model):
-    cpersonUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    cpersonUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name="Chairperson User")
 
     class Meta:
         verbose_name_plural = "Chairperson Information"
@@ -194,7 +194,7 @@ class FacultyInfo(models.Model):
         message=phone_error_message
     )
 
-    facultyUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    facultyUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Faculty User')
     facultyID = models.CharField(validators=[facultyID_regex], max_length=50,
                                  unique=True, verbose_name='Faculty ID', null=True)
     collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
@@ -223,10 +223,14 @@ class BlockSection(models.Model):
         ('3', '3'),
         ('4', '4'),
     )
+    Block_CHOICES = (
+        ('BS IT', 'BS IT'),
+        ('BS EE', 'BS EE'),
+    )
     blockYear = models.CharField(max_length=150, null=True, choices= Year_CHOICES, verbose_name='Block Year Level')
     blockSection = models.CharField(max_length=50,null=True, verbose_name='Block Section')
     college = models.ForeignKey(College, null=True, verbose_name='College', on_delete=models.PROTECT)
-    blockCourse = models.CharField(max_length=50, null=True, verbose_name='Block Course')
+    blockCourse = models.CharField(max_length=50, null=True, choices= Block_CHOICES, verbose_name='Block Course')
     curryear = models.CharField(max_length=50, null=True, verbose_name='Curriculum Year')
     adviser = models.ForeignKey(FacultyInfo, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -691,16 +695,22 @@ class studentScheduling(models.Model):
 
 # --------------------------- Faculty Applicant Database ---------------------------------------
 class FacultyApplicant(models.Model):
-    lastName = models.CharField(max_length=150)
-    firstName = models.CharField(max_length=150)
-    middleName = models.CharField(max_length=150)
+    phone_error_message = 'Contact number must be entered in format: 09XXXXXXXXX'
+    phone_regex = RegexValidator(
+        regex=r'^09\d{9}$',
+        message=phone_error_message
+    )
+    
+    last_Name = models.CharField(max_length=150)
+    first_Name = models.CharField(max_length=150)
+    middle_Name = models.CharField(max_length=150)
     email = models.EmailField()
-    phoneNumber = models.CharField(max_length=150)
+    phone_Number = models.CharField(validators=[phone_regex], max_length=150)
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
-    CV = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
+    curriculum_Vitae = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
     certificates = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
     credentials = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
-    TOR = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
+    transcripts_of_Records = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
     class Meta:
