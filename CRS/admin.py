@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django_admin_listfilter_dropdown.filters import ( DropdownFilter, ChoiceDropdownFilter, RelatedDropdownFilter )
+from django.contrib.auth.models import User
 
 from .models import *
 
@@ -16,9 +17,10 @@ admin.site.site_title = 'iPLM Administration'
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
+    
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-
+    
     class Meta:
         model = User
         fields = ('email', 'firstName', 'middleName', 'lastName')
@@ -70,7 +72,7 @@ class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
     add_form = UserCreationForm
-
+    
     inlines = [FacultyInfoInline, StudentInfoInline]  # Add other InLine for cperson, student, etc...
 
     ''' The fields to be used in displaying the User model.
@@ -340,7 +342,7 @@ admin.site.register(subjectInfo, subjectInfoAdmin)
 #CURRICULUM INFORMATION
 class curriculumInfoAdmin(admin.ModelAdmin):
     model = curriculumInfo
-    list_display = ('get_id','schoolYear','schoolSem','subject','subjectUnits','subjectPrequisite','yearstanding')
+    list_display = ('get_id','schoolYear','schoolSem','subject','subject_Units','subject_Prequisite','year_standing')
 
     def get_id(self, obj):
         return obj.id
@@ -354,13 +356,13 @@ class curriculumInfoAdmin(admin.ModelAdmin):
     def subject(self, obj):
         return obj.subjectCode
 
-    def subjectUnits(self, obj):
+    def subject_Units(self, obj):
         return obj.subjectUnits
 
-    def subjectPrequisite(self, obj):
+    def subject_Prequisite(self, obj):
         return obj.subjectCode.subjectPrerequisite
 
-    def yearstanding(self, obj):
+    def year_standing(self, obj):
         return obj.subjectCode.yearstanding
 
     #list_filter = ('subjectCode','subjectName','yearstanding','college')
@@ -481,7 +483,7 @@ admin.site.register(RoomInfo)
 class hdApplicantAdmin(admin.ModelAdmin):
     search_fields = ['studentID__studentID', 'studentID__studentCourse', 'id', 'studentID__studentUser__firstName', 'studentID__studentUser__lastName']
     model = hdApplicant
-    list_display = ('get_id','course','studentID','FirstName','MiddleName','LastName','status','Applicationstatus')
+    list_display = ('get_id','course','studentID','First_Name','Middle_Name','Last_Name','status','Application_status')
 
     def get_id(self, obj):
         return obj.id
@@ -492,19 +494,19 @@ class hdApplicantAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def FirstName(self, obj):
+    def First_Name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
+    def Last_Name(self, obj):
         return obj.studentID.studentUser.lastName
 
     def status(self, obj):
         return obj.studentID.studentRegStatus
 
-    def Applicationstatus(self, obj):
+    def Application_status(self, obj):
         return obj.remarks
 
 

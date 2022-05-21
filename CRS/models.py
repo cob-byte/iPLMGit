@@ -70,9 +70,9 @@ class User(AbstractBaseUser):
         unique=True,
     )
     
-    firstName = models.CharField(max_length=100)
-    middleName = models.CharField(max_length=100, blank=True, default=" ", verbose_name="Middle Name")
-    lastName = models.CharField(max_length=100)
+    firstName = models.CharField(max_length=100, verbose_name='First Name')
+    middleName = models.CharField(max_length=100, blank=True, default=" ", verbose_name='Middle Name')
+    lastName = models.CharField(max_length=100, verbose_name='Last Name')
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=True)
@@ -370,7 +370,7 @@ class StudentInfo(models.Model):
         message=curr_error_message
     )
 
-    studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True)
+    studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')
     studentID = models.CharField(validators=[studentID_regex], max_length=50, unique=True, verbose_name='Student ID',
                                  null=True)
     collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
@@ -402,15 +402,15 @@ class StudentInfo(models.Model):
 # HD Application
 class hdApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
-    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
-    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
-    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
-    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
-    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True)
+    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Drop Form')
+    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Clearance Form')
+    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Transfer Certificate')
+    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student HD Letter')
+    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Grades')
+    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student\'s Parent Signature')
     remarks = models.CharField(default="Submitted", max_length=25)
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
-    hd_dateSubmitted = models.DateField(default=now)
+    hd_dateSubmitted = models.DateField(default=now, verbose_name='HD Date Submitted')
 
     # dateApproved = models.DateTimeField()
     class Meta:
@@ -423,16 +423,16 @@ class hdApplicant(models.Model):
 # OJT Application
 class OjtApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    ojtResume = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtRecLetter = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtWaiver = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtAcceptForm = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtCompanyProfile = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtCompanyId = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
-    ojtMedcert = models.FileField(upload_to='ojtSubmission/', blank=True, null=True)
+    ojtResume = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Resume')
+    ojtRecLetter = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Recommended Letter')
+    ojtWaiver = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name=' OJT Waiver')
+    ojtAcceptForm = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Accept Form')
+    ojtCompanyProfile = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Company Profile')
+    ojtCompanyId = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Company ID')
+    ojtMedcert = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Medical Certificate')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
-    ojt_dateSubmitted = models.DateField(default=now)
+    ojt_dateSubmitted = models.DateField(default=now, verbose_name='OJT Date Submitted')
 
     class Meta:
         verbose_name_plural = "OJT Applicants"
@@ -445,7 +445,7 @@ class spApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
     remarks = models.CharField(default="Submitted", max_length=25)
     date = models.DateField(default=now)
-    sdplan = models.FileField(upload_to='spSubmission/', null=True, blank=True)
+    sdplan = models.FileField(upload_to='spSubmission/', null=True, blank=True, verbose_name='Study Plan')
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
 
     class Meta:
@@ -457,16 +457,16 @@ class spApplicant(models.Model):
 
 class LOAApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    studentLOAClearanceform = models.FileField(upload_to='LOASubmission/', blank=True, null=True)
-    studentStudyplan = models.FileField(upload_to='LOASubmission/', blank=True, null=True)
-    studentLOAletter = models.FileField(upload_to='LOASubmission/', blank=True, null=True)
-    studentLOAFORM = models.FileField(upload_to='LOASubmission/', blank=True, null=True)
-    studentChecklist = models.FileField(upload_to='LOASubmission/', blank=True, null=True)
+    studentLOAClearanceform = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Clearance Form')
+    studentStudyplan = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student Study Plan')
+    studentLOAletter = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Letter')
+    studentLOAFORM = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Form')
+    studentChecklist = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student Checklist')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     comment = models.TextField(null=True, blank=True, verbose_name='Feedback')
-    LOA_dateSubmitted = models.DateField(default=now)
-    signature1 = models.ImageField(upload_to='LOASign/', null=True, blank=True)
-    signature2 = models.ImageField(upload_to='LOASign/', null=True, blank=True)
+    LOA_dateSubmitted = models.DateField(default=now, verbose_name='LOA Date Submitted')
+    signature1 = models.ImageField(upload_to='LOASign/', null=True, blank=True, verbose_name='First Signature')
+    signature2 = models.ImageField(upload_to='LOASign/', null=True, blank=True, verbose_name='Second Signature')
 
     # dateApproved = models.DateTimeField()
     class Meta:
@@ -520,7 +520,7 @@ class currchecklist(models.Model):
 
 class crsGrade(models.Model):
     studentID =  models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE,blank=True)
-    crsFile = models.FileField(upload_to='crsSubmission/', blank=True, null=True)
+    crsFile = models.FileField(upload_to='crsSubmission/', blank=True, null=True, verbose_name='CRS File')
     comment = models.TextField(null=True, blank=True, verbose_name='Feedback')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
@@ -534,10 +534,10 @@ class crsGrade(models.Model):
 # FORMS TO FILL-UP
 class hdClearanceForm(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    firstEnrollment = models.CharField(max_length=100, verbose_name="Semester (First enrollment in PLM)", null=True)
+    firstEnrollment = models.CharField(max_length=100, verbose_name="Semester (First Enrollment in PLM)", null=True)
     studentFirstSY = models.CharField(max_length=100, verbose_name="School Year (First Enrollment in PLM)", null=True)
     studentFirstCollege = models.CharField(max_length=100, verbose_name="College (First Enrollment in PLM)", null=True)
-    lastEnrollment = models.CharField(max_length=100, verbose_name="Semester (Last/Present enrollment in PLM)",
+    lastEnrollment = models.CharField(max_length=100, verbose_name="Semester (Last/Present Enrollment in PLM)",
                                       null=True)
     studentLastPCollege = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
                                            null=True)
@@ -577,10 +577,10 @@ class hdTransferCert(models.Model):
 
 class loaClearanceForm(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
-    firstEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (First enrollment in PLM)", null=True)
+    firstEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (First Enrollment in PLM)", null=True)
     studentFirstSY2 = models.CharField(max_length=100, verbose_name="School Year (First Enrollment in PLM)", null=True)
     studentFirstCollege2 = models.CharField(max_length=100, verbose_name="College (First Enrollment in PLM)", null=True)
-    lastEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (Last/Present enrollment in PLM)",
+    lastEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (Last/Present Enrollment in PLM)",
                                        null=True)
     studentLastPCollege2 = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
                                             null=True)
@@ -615,18 +615,18 @@ class HD_DroppingForm(models.Model):
 class ShifterApplicant(models.Model):
     studentID = models.CharField(max_length=100, verbose_name="StudentNumber", null=True)
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
-    lname = models.CharField(max_length=100, verbose_name="LastName", null=True)
-    fname = models.CharField(max_length=100, verbose_name="FirstName", null=True)
-    mname = models.CharField(max_length=100, verbose_name="MiddleName", null=True)
-    eadd = models.CharField(max_length=100, verbose_name="EmailAddress", null=True)
-    cnum = models.CharField(max_length=100, verbose_name="ContactNumber", null=True)
-    studentStudyplan = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True)
-    studentshifterletter = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True)
-    studentGrade = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True)
+    lname = models.CharField(max_length=100, verbose_name="Last Name", null=True)
+    fname = models.CharField(max_length=100, verbose_name="First Name", null=True)
+    mname = models.CharField(max_length=100, verbose_name="Middle Name", null=True)
+    eadd = models.CharField(max_length=100, verbose_name="Email Address", null=True)
+    cnum = models.CharField(max_length=100, verbose_name="Contact Number", null=True)
+    studentStudyplan = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Study Plan')
+    studentshifterletter = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Shifter Letter')
+    studentGrade = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Grades')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
-    shifter_dateSubmitted = models.DateField(default=now)
-    signature1 = models.ImageField(upload_to='ShifterSign/', null=True, blank=True)
-    signature2 = models.ImageField(upload_to='ShifterSign/', null=True, blank=True)
+    shifter_dateSubmitted = models.DateField(default=now, verbose_name='Shifter Date Submitted')
+    signature1 = models.ImageField(upload_to='ShifterSign/', null=True, blank=True, verbose_name='First Signature')
+    signature2 = models.ImageField(upload_to='ShifterSign/', null=True, blank=True, verbose_name='Second Signature')
 
     # dateApproved = models.DateTimeField()
 
@@ -639,22 +639,22 @@ class ShifterApplicant(models.Model):
 
 # TRANSFEREE APPLICANT
 class TransfereeApplicant(models.Model):
-    studentID = models.CharField(max_length=100, verbose_name="StudentNumber", null=True)
+    studentID = models.CharField(max_length=100, verbose_name="Student Number", null=True)
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
-    lname = models.CharField(max_length=100, verbose_name="LastName", null=True)
-    fname = models.CharField(max_length=100, verbose_name="FirstName", null=True)
-    mname = models.CharField(max_length=100, verbose_name="MiddleName", null=True)
-    eadd = models.CharField(max_length=100, verbose_name="EmailAddress", null=True)
-    cnum = models.CharField(max_length=100, verbose_name="ContactNumber", null=True)
-    studentStudyplan = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True)
-    studentNote = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True)
-    studentHD = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True)
-    studentGoodmoral = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True)
-    studentGrade = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True)
+    lname = models.CharField(max_length=100, verbose_name="Last Name", null=True)
+    fname = models.CharField(max_length=100, verbose_name="First Name", null=True)
+    mname = models.CharField(max_length=100, verbose_name="Middle Name", null=True)
+    eadd = models.CharField(max_length=100, verbose_name="Email Address", null=True)
+    cnum = models.CharField(max_length=100, verbose_name="Contact Number", null=True)
+    studentStudyplan = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Study Plan')
+    studentNote = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Note')
+    studentHD = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student HD')
+    studentGoodmoral = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Good Moral')
+    studentGrade = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Grade')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
-    transfer_dateSubmitted = models.DateField(default=now)
-    signature1 = models.ImageField(upload_to='TransfereeSign/', null=True, blank=True)
-    signature2 = models.ImageField(upload_to='TransfereeSign/', null=True, blank=True)
+    transfer_dateSubmitted = models.DateField(default=now, verbose_name='Tranfer Date Submitted')
+    signature1 = models.ImageField(upload_to='TransfereeSign/', null=True, blank=True, verbose_name='First Signature')
+    signature2 = models.ImageField(upload_to='TransfereeSign/', null=True, blank=True, verbose_name='Second Signature')
 
     # dateApproved = models.DateTimeField()
 
@@ -683,8 +683,8 @@ class studentScheduling(models.Model):
     subjectCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
     section = models.IntegerField(null=True,verbose_name='Subject Section' )
     day = models.CharField(max_length=100, null=True, choices=MONTH, verbose_name='Day')
-    timeStart = models.TimeField()
-    timeEnd = models.TimeField()
+    timeStart = models.TimeField(verbose_name='Time Start')
+    timeEnd = models.TimeField(verbose_name='Time End')
     room = models.ForeignKey(RoomInfo, null=True, verbose_name='Room', on_delete=models.CASCADE)
     type= models.CharField(max_length=100, verbose_name="type",choices=TYPE, null=True)
     realsection= models.ForeignKey(BlockSection, null=True, verbose_name='Block Section', on_delete=models.SET_NULL,blank=True)
@@ -783,8 +783,8 @@ class courseList(models.Model):
 class studyPlan(models.Model):
     studentinfo = models.ForeignKey(StudentInfo, unique=True, verbose_name='Student', null=True, on_delete=models.CASCADE)
     admissionYr = models.CharField(max_length=50, verbose_name="Admission Year", null=True, blank=True)
-    curricula = models.ForeignKey(Curricula, verbose_name='', null=True, blank=True, on_delete=models.SET_NULL)
-    failedsubs = models.JSONField(default='')
+    curricula = models.ForeignKey(Curricula, verbose_name='Curricula', null=True, blank=True, on_delete=models.SET_NULL)
+    failedsubs = models.JSONField(default='', verbose_name='Failed Subjects')
 
     def __str__(self):
         return self.studentinfo.studentID
@@ -795,7 +795,7 @@ class Notification(models.Model):
         ('Unread', 'Unread')
     )
 
-    user_id = models.ForeignKey(User, verbose_name='user_id', on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, verbose_name='User Email', on_delete=models.CASCADE)
     title = models.CharField(verbose_name="title", max_length=255)
     description = models.CharField(verbose_name="description", max_length=255)
     status = models.CharField(verbose_name="status", choices=STATUS_CHOICES, max_length=255, default="Unread")
