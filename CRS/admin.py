@@ -44,7 +44,7 @@ class UserChangeForm(forms.ModelForm):
     the user, but replaces the password field with admin's
     disabled password hash display field.
     """
-    password = ReadOnlyPasswordHashField()
+    #password = ReadOnlyPasswordHashField()
 
     class Meta:
         model = User
@@ -227,10 +227,10 @@ class AcademicYearInfoAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         # Disable delete
-        return False
+        return True
 
     def has_add_permission(self, request, obj=None):
-        return False
+        return True
 
 admin.site.register(AcademicYearInfo, AcademicYearInfoAdmin)
 
@@ -807,3 +807,8 @@ class courseListAdmin(admin.ModelAdmin):
 admin.site.register(Curricula, CurriculaAdmin),
 admin.site.register(courseList, courseListAdmin),
 admin.site.register(studyPlan),
+
+class NotificationAdmin(admin.ModelAdmin): 
+    list_display = ['user_id', 'title', 'description', 'status', 'created_at']
+
+admin.site.register(Notification, NotificationAdmin) 

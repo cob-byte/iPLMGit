@@ -1,3 +1,4 @@
+import dataclasses
 from django.contrib.messages.api import error
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, update_session_auth_hash
@@ -6,7 +7,7 @@ from django.contrib import messages
 from . import filters
 from .forms import *
 from .models import *
-from django.conf import os
+from django.conf import PASSWORD_RESET_TIMEOUT_DAYS_DEPRECATED_MSG, os
 from iPLMver2.settings import EMAIL_HOST_USER
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, reverse, get_object_or_404
@@ -22,10 +23,16 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.forms import inlineformset_factory
 from django.db.models import Avg, Sum
-from django.core.mail import EmailMultiAlternatives, send_mail, EmailMessage
+from django.core.mail import EmailMultiAlternatives, send_mail, EmailMessage, BadHeaderError
 from CRS.models import FacultyApplicant
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.auth.forms import PasswordResetForm
+from django.template.loader import render_to_string
+from django.db.models.query_utils import Q
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 def error_404_view(request,exception):
     return render(request, 'error.html')
@@ -35,6 +42,17 @@ def error_500_view(request):
 
 def aboutUs(request):
     return render(request, 'aboutUs.html')
+
+def get_notifications(user_id):
+    try :
+        return Notification.objects.filter(user_id=user_id)
+    except Notification.DoesNotExist:
+        return None
+
+def send_notifications(user_id, title, description):
+    Notification(user_id=user_id, title=title, description=description)
+    Notification.save()
+    return 'Successfully Send Notification'
     
 def index(request):
     if request.method == 'POST':
@@ -45,8 +63,8 @@ def index(request):
         if user is not None:
             login(request, user)
             type_obj = request.user
-            if user.is_authenticated and type_obj.is_chairperson and type_obj.is_admin and type_obj.is_faculty:
-                return redirect('choose_one')
+            if user.is_authenticated and type_obj.is_chairperson:
+                return redirect('chairperson')
             elif user.is_authenticated and type_obj.is_admin:
                 return redirect('admin')
             elif user.is_authenticated and type_obj.is_faculty:
@@ -89,9 +107,10 @@ def chairperson(request):
             countf = FacultyInfo.objects.filter(departmentID=cperson.departmentID).count()
             college = College.objects.filter(collegeName='CET')
             countsub = subjectInfo.objects.filter(college__in=college).count()
+        notifications = get_notifications(id)
         return render(request, './chairperson/chairperson.html', {'user': user, 'fname': fname, 'mname': mname,
                                                                   'lname': lname, 'counts': counts, 'countf': countf,
-                                                                  'countsub': countsub, 'acad': acad})
+                                                                  'countsub': countsub, 'acad': acad, 'notifications': notifications})
     else:
         return redirect('index')    
 
@@ -1446,13 +1465,30 @@ def students_bsee6B6(request):
     return render(request, './chairperson/students BSEE/students_bsee6B6.html', context)
 
 # Faculty (chairperson)
+#def full_time(request):
+   # id = request.user.id; cperson = FacultyInfo.objects.get(pdk=id)
+    #work_status = FacultyInfo.objects.filter(facultyWorkstatus='Full-Time').filter(departmentID=cperson.departmentID)
+    #count = work_status.count()
+    #result = filters.Faculty(request.GET, queryset=work_status); work_status = result.qs
+    #context = {'work_status': work_status, 'count': count, 'result': result}
+    #return render(request, './chairperson/Faculty/full_time.html', context)
+
+
 def full_time(request):
     id = request.user.id; cperson = FacultyInfo.objects.get(pk=id)
     work_status = FacultyInfo.objects.filter(facultyWorkstatus='Full-Time').filter(departmentID=cperson.departmentID)
     count = work_status.count()
-    result = filters.Faculty(request.GET, queryset=work_status); work_status = result.qs
-    context = {'work_status': work_status, 'count': count, 'result': result}
+    if request.GET.get('search'):
+        search = request.GET['search']
+        work_status = FacultyInfo.objects.filter(
+            Q(facultyID__contains=search) |
+            Q(facultyUser__firstName__icontains=search) |
+            Q(facultyUser__lastName__icontains=search) |
+            Q(facultyUser__middleName__icontains=search)
+        )
+    context = {'work_status': work_status, 'count': count}
     return render(request, './chairperson/Faculty/full_time.html', context)
+
 def part_time(request):
     id = request.user.id; cperson = FacultyInfo.objects.get(pk=id)
     work_status = FacultyInfo.objects.filter(facultyWorkstatus='Part-Time').filter(departmentID=cperson.departmentID)
@@ -1823,7 +1859,7 @@ def parttime_sched(request):
         return redirect('index')
 
 
-def fStudents_advisory(request):
+"""def fStudents_advisory(request):
     if request.user.is_authenticated and request.user.is_faculty:
         id= request.user.id
         f_user = FacultyInfo.objects.get(pk = id)
@@ -1836,7 +1872,24 @@ def fStudents_advisory(request):
         context = {'advisory': advisory, 'count': count, 'stud_advisory': stud_advisory}
         return render(request, 'faculty/fStudents_advisory.html', context)
     else:
+        return redirect('index')"""
+
+def fStudents_advisory(request):
+    if request.user.is_authenticated and request.user.is_faculty:
+        id= request.user.id
+        f_user = FacultyInfo.objects.get(pk = id)
+        advisory = BlockSection.objects.filter(adviser = f_user)
+        section = BlockSection.objects.filter(blockYear="1", blockSection="1", blockCourse='BSIT')
+        stud_advisory = StudentInfo.objects.filter(studentSection__in = advisory).filter(studentSection__in=section); 
+        count = stud_advisory.count()
+        if count == 0:
+            messages.error (request, 'You have no advisory class!')
+            return render (request, './faculty/fStudents_advisory.html')
+        context = {'advisory': advisory, 'count': count, 'stud_advisory': stud_advisory}
+        return render(request, 'faculty/fStudents_advisory.html', context)
+    else:
         return redirect('index')
+
 
 def fStudents_viewStudentGrade (request,stud_id):
     fcount = 0
@@ -5149,6 +5202,50 @@ def GradesNotif(request):
     else:
          return redirect('index')
 
+def notifications(request, notification_id):
+    fname = request.user.firstName
+    mname = request.user.middleName
+    lname = request.user.lastName
+    notification = Notification.objects.get(pk=notification_id)
+    notifications = get_notifications(request.user.id)
+    print(notification.title)
+    return render(request, 'chairperson/chairperson_notification.html', 
+    {
+        'fname' : fname,
+        'mname' : mname,
+        'lname' : lname,
+        'notification' : notification,
+        'notifications': notifications
+    })
 
-
-
+def pw_reset(request):
+    if request.method == 'POST':
+        password_form = PasswordResetForm(request.POST)
+        if password_form.is_valid():
+            data = password_form.cleaned_data['email']
+            user_email = User.objects.filter(Q(email=data))
+            if user_email.exists():
+                for user in user_email:
+                    subject = 'Password Reset Request'
+                    email_template_name = 'pw_reset/password_message.txt'
+                    parameters = {
+                        'email': user.email,
+                        'lastName': user.lastName,
+                        'domain': '127.0.0.1:8000',
+                        'site_name': 'iPLM',
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, parameters)
+                    try:
+                        send_mail(subject, email, '', [user.email], fail_silently=False)
+                    except:
+                        return HttpResponse('Invalid Header')
+                    return redirect('password_reset_done')
+    else:
+        password_form = PasswordResetForm()
+    context = {
+        'password_form': password_form,
+    }
+    return render(request, 'pw_reset/password_reset.html', context)
