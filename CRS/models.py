@@ -701,16 +701,16 @@ class FacultyApplicant(models.Model):
         message=phone_error_message
     )
     
-    last_Name = models.CharField(max_length=150)
-    first_Name = models.CharField(max_length=150)
-    middle_Name = models.CharField(max_length=150)
+    lastName = models.CharField(max_length=150, verbose_name='Last Name')
+    firstName = models.CharField(max_length=150, verbose_name='First Name')
+    middleName = models.CharField(max_length=150, verbose_name='Middle Name')
     email = models.EmailField()
-    phone_Number = models.CharField(validators=[phone_regex], max_length=150)
+    phoneNumber = models.CharField(validators=[phone_regex], max_length=150, verbose_name='Phone Number')
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
-    curriculum_Vitae = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
+    CV = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, verbose_name='Curriculum Vitae')
     certificates = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
     credentials = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
-    transcripts_of_Records = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
+    TOR = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, verbose_name='Transcripts of Records')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
     class Meta:
