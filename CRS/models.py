@@ -600,7 +600,7 @@ class loaForm(models.Model):
 
 
 # HD Dropping Form
-class HD_DroppingForm(models.Model):
+class hdDroppingForm(models.Model):
     Admin_Upload = models.FileField(upload_to='Student/Dropping Form')
 
     class Meta:

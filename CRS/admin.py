@@ -788,7 +788,7 @@ class loaFormAdmin(admin.ModelAdmin):
 
 admin.site.register(loaForm, loaFormAdmin)
 
-admin.site.register(HD_DroppingForm)
+admin.site.register(hdDroppingForm)
 
 #Study Plan
 class CurriculaAdmin(admin.ModelAdmin):
