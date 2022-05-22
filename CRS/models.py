@@ -449,7 +449,7 @@ class spApplicant(models.Model):
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
 
     class Meta:
-        verbose_name_plural = "Studyplan Applicants"
+        verbose_name_plural = "Study Plan Applicants"
 
     def __str__(self):
         return self.studentID.studentUser.lastName
