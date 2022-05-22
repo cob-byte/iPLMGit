@@ -676,8 +676,8 @@ class studentScheduling(models.Model):
     ('Saturday','Saturday')
 )
     TYPE = (
-    ('Asychronous','Asychronous'),
-    ('Sychronous','Sychronous'),
+    ('Asynchronous','Asynchronous'),
+    ('Synchronous','Synchronous'),
 )
     instructor = ForeignKey(FacultyInfo,  null=True, verbose_name='Instructor', on_delete=models.SET_NULL,blank=True)
     subjectCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
