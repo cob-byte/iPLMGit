@@ -586,17 +586,30 @@ class loaClearanceForm(models.Model):
     for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
         SchoolYearDropdown.append((y, y))
 
+    CollegeDropdown = [
+        ('1', 'CET'),
+        ('2', 'CEE')
+    ]
+
+    PurposeDropdown = [
+        ('1', 'Health Problems'),
+        ('2', 'Financila Problems'),
+        ('3', 'Employment Obligations'),
+        ('4', 'Depression'),
+        ('5', 'Academic Endesvors')
+    ]
+
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
-    firstEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (First Enrollment in PLM)", null=True)
-    studentFirstSY2 = models.CharField(max_length=100, verbose_name="School Year (First Enrollment in PLM)", null=True)
-    studentFirstCollege2 = models.CharField(max_length=100, verbose_name="College (First Enrollment in PLM)", null=True)
-    lastEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (Last/Present Enrollment in PLM)",
+    firstEnrollment2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Semester (First Enrollment in PLM)", null=True)
+    studentFirstSY2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="School Year (First Enrollment in PLM)", null=True)
+    studentFirstCollege2 = models.CharField(max_length=100, choices=CollegeDropdown, verbose_name="College (First Enrollment in PLM)", null=True)
+    lastEnrollment2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Semester (Last/Present Enrollment in PLM)",
                                        null=True)
-    studentLastPCollege2 = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
+    studentLastPCollege2 = models.CharField(max_length=100, choices=CollegeDropdown, verbose_name="College (Last/Present Enrollment in PLM)",
                                             null=True)
-    studentLastPSY2 = models.CharField(max_length=100, verbose_name="School Year (Last/Present Enrollment in PLM)",
+    studentLastPSY2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="School Year (Last/Present Enrollment in PLM)",
                                        null=True)
-    studentPurpose2 = models.CharField(max_length=100, verbose_name="Purpose of Clearance", null=True)
+    studentPurpose2 = models.CharField(max_length=100, choices=PurposeDropdown, verbose_name="Purpose of Clearance", null=True)
     studentOthers2 = models.CharField(max_length=100, verbose_name="Student Others 2", blank=True, null=True)
     studentCurrentdate2 = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
