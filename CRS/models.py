@@ -402,15 +402,15 @@ class StudentInfo(models.Model):
 # HD Application
 class hdApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Drop Form')
-    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Clearance Form')
-    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Transfer Certificate')
-    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student HD Letter')
-    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Grades')
-    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student\'s Parent Signature')
+    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Drop Form")
+    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Clearance Form")
+    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Transfer Certificate")
+    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student HD Letter")
+    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Grades")
+    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student\'s Parent Signature")
     remarks = models.CharField(default="Submitted", max_length=25)
-    comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
-    hd_dateSubmitted = models.DateField(default=now, verbose_name='HD Date Submitted')
+    comment = models.TextField(max_length=150, null=True, blank=True, verbose_name="Feedback")
+    hd_dateSubmitted = models.DateField(default=now, verbose_name="HD Date Submitted")
 
     # dateApproved = models.DateTimeField()
     class Meta:
