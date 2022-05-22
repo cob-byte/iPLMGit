@@ -232,7 +232,7 @@ class AcademicYearInfoAdmin(admin.ModelAdmin):
         return True
 
     def has_add_permission(self, request, obj=None):
-        return True
+        return False
 
 admin.site.register(AcademicYearInfo, AcademicYearInfoAdmin)
 
