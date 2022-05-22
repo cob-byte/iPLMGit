@@ -584,10 +584,10 @@ class loaClearanceForm(models.Model):
                                        null=True)
     studentLastPCollege2 = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
                                             null=True)
-    studentLastPSY2 = models.CharField(max_length=100, verbose_name="School year (Last/Present Enrollment in PLM)",
+    studentLastPSY2 = models.CharField(max_length=100, verbose_name="School Year (Last/Present Enrollment in PLM)",
                                        null=True)
     studentPurpose2 = models.CharField(max_length=100, verbose_name="Purpose of Clearance", null=True)
-    studentOthers2 = models.CharField(max_length=100, blank=True, null=True)
+    studentOthers2 = models.CharField(max_length=100, verbose_name="Student Others 2", blank=True, null=True)
     studentCurrentdate2 = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
 
@@ -596,9 +596,9 @@ class loaForm(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     genave = models.DecimalField(decimal_places=2, max_digits=3, verbose_name="GWA", null=True)
     sem = models.CharField(max_length=100, verbose_name="Effective From Sem", null=True)
-    sy = models.CharField(max_length=100, verbose_name="Effective From Sy", null=True)
+    sy = models.CharField(max_length=100, verbose_name="Effective From S.Y.", null=True)
     sem2 = models.CharField(max_length=100, verbose_name="Effective Until Sem", null=True)
-    sy2 = models.CharField(max_length=100, verbose_name="Effective Until Sy", null=True)
+    sy2 = models.CharField(max_length=100, verbose_name="Effective Until S.Y.", null=True)
     reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
@@ -613,7 +613,7 @@ class HD_DroppingForm(models.Model):
 
 # SHIFTER APPLICANT
 class ShifterApplicant(models.Model):
-    studentID = models.CharField(max_length=100, verbose_name="StudentNumber", null=True)
+    studentID = models.CharField(max_length=100, verbose_name="Student Number", null=True)
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
     lname = models.CharField(max_length=100, verbose_name="Last Name", null=True)
     fname = models.CharField(max_length=100, verbose_name="First Name", null=True)
