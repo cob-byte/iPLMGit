@@ -145,8 +145,8 @@ class ChairpersonInfo (models.Model):
 class Department(models.Model):
     collegeId = ForeignKey(College, null=True, verbose_name='College', on_delete=models.CASCADE)
     courseName = models.CharField(max_length=150, null=True, verbose_name='Course')
-    courseDesc = models.CharField(max_length=200, null=True, blank=True, verbose_name='Course Description')
-    chairperson = ForeignKey(ChairpersonInfo, on_delete=models.PROTECT, null=True, blank=True)
+    courseDesc = models.CharField(max_length=200, null=True, blank=False, verbose_name='Course Description')
+    chairperson = ForeignKey(ChairpersonInfo, on_delete=models.PROTECT, null=True, blank=False)
 
     def __str__(self):
         return self.courseName
