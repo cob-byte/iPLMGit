@@ -505,7 +505,7 @@ class currchecklist(models.Model):
     ('6', '6th Year'),
     )
     
-    owner = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE,blank=True)
+    owner = models.ForeignKey(StudentInfo, null=True, verbose_name='Student Number', on_delete=models.CASCADE,blank=True)
     curriculumCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
     subjectGrades = models.DecimalField(decimal_places=2, max_digits=3,choices=GRADES, verbose_name="Subject Grades", null=True)
     yearTaken = models.CharField(max_length=50, choices=YEARLEVEL, verbose_name='Year Taken', null=True)
