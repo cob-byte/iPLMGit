@@ -582,10 +582,11 @@ class loaClearanceForm(models.Model):
         ('2', 'Second Semester')
     ]
 
-    SchoolYearDropdown = [
-        for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
-            SchoolYearDropdown.append((y, y))
-    ]
+    SchoolYearDropdown = []
+    for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
+        SchoolYearDropdown.append((y, y))
+
+    CollegeDropdown = 
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     firstEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (First Enrollment in PLM)", null=True)
     studentFirstSY2 = models.CharField(max_length=100, verbose_name="School Year (First Enrollment in PLM)", null=True)
