@@ -619,9 +619,9 @@ class loaForm(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     genave = models.DecimalField(decimal_places=2, max_digits=3, verbose_name="GWA", null=True)
     sem = models.CharField(max_length=100, verbose_name="Effective From Sem", null=True)
-    sy = models.CharField(max_length=100, verbose_name="Effective From S.Y.", null=True)
+    sy = models.CharField(max_length=100, verbose_name="Effective From S.Y.:", null=True)
     sem2 = models.CharField(max_length=100, verbose_name="Effective Until Sem", null=True)
-    sy2 = models.CharField(max_length=100, verbose_name="Effective Until S.Y.", null=True)
+    sy2 = models.CharField(max_length=100, verbose_name="Effective Until S.Y.:", null=True)
     reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
