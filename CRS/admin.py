@@ -138,7 +138,7 @@ class ChairpersonInfoAdmin(admin.ModelAdmin):
 class FacultyInfoAdmin(admin.ModelAdmin):
     search_fields = ['facultyUser__id', 'facultyUser__email', 'facultyUser__firstName', 'facultyUser__lastName','facultyUser__middleName']
     model = FacultyInfo
-    list_display = ('get_id', 'get_email', 'get_lname', 'get_fname', 'get_mname')
+    list_display = ('get_id', 'get_email', 'get_lname', 'get_fname', 'get_mname', 'get_departmentID')
 
     def get_email(self, obj):
         return obj.facultyUser.email
@@ -165,7 +165,17 @@ class FacultyInfoAdmin(admin.ModelAdmin):
 
     get_mname.short_description = 'Middle Name'
 
+    def get_mname(self, obj):
+        return obj.facultyUser.middleName
 
+    get_mname.short_description = 'Middle Name'
+
+    def get_departmentID(self, obj):
+        return obj.departmentID
+
+    get_departmentID.short_description = 'Department'
+
+    list_filter = [('departmentID',RelatedDropdownFilter)]
 
 # STUDENT ADMIN
 class StudentInfoAdmin(admin.ModelAdmin):
@@ -274,7 +284,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     def chairperson(self, obj):
         return obj.chairperson
 
-    list_filter = [('collegeId',RelatedDropdownFilter)]
+    list_filter = [('courseName',DropdownFilter)]
 
 admin.site.register(Department, DepartmentAdmin)
 
@@ -688,7 +698,42 @@ admin.site.register(TransfereeApplicant, TransfereeApplicantAdmin)
 
 
 # FACULTY APPLICANT
-admin.site.register(FacultyApplicant),
+class FacultyApplicantAdmin(admin.ModelAdmin):
+    model = FacultyInfo
+    list_display = ('get_id', 'get_email', 'get_fname', 'get_lname', 'get_mname', 'get_department')
+
+    def get_email(self, obj):
+        return obj.email
+
+    get_email.short_description = 'Email'
+
+    def get_id(self, obj):
+        return obj.id
+
+    get_id.short_description = 'ID'
+    def get_fname(self, obj):
+        return obj.firstName
+
+    get_fname.short_description = 'First Name'
+
+    def get_lname(self, obj):
+        return obj.lastName
+
+    get_lname.short_description = 'Last Name'
+
+    def get_mname(self, obj):
+        return obj.middleName
+
+    get_mname.short_description = 'Middle Name'
+
+    def get_department(self, obj):
+        return obj.department
+
+    get_department.short_description = 'department'
+
+    list_filter = [('department',DropdownFilter)]
+    
+admin.site.register(FacultyApplicant, FacultyApplicantAdmin),
 
 
 

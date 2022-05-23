@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\User\Desktop\iPLMMain\iPLMGit\env"
+VIRTUAL_ENV="C:\Users\LENOVO\Desktop\iPLM\iPLM_clone\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

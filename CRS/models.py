@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.core.validators import RegexValidator
 from django.utils import timezone
 from django.db.models import JSONField, Model
+import datetime
 
 now = timezone.now()
 
@@ -144,8 +145,8 @@ class ChairpersonInfo (models.Model):
 class Department(models.Model):
     collegeId = ForeignKey(College, null=True, verbose_name='College', on_delete=models.CASCADE)
     courseName = models.CharField(max_length=150, null=True, verbose_name='Course')
-    courseDesc = models.CharField(max_length=200, null=True, blank=True, verbose_name='Course Description')
-    chairperson = ForeignKey(ChairpersonInfo, on_delete=models.PROTECT, null=True, blank=True)
+    courseDesc = models.CharField(max_length=200, null=True, blank=False, verbose_name='Course Description')
+    chairperson = ForeignKey(ChairpersonInfo, on_delete=models.PROTECT, null=True, blank=False)
 
     def __str__(self):
         return self.courseName
@@ -402,15 +403,15 @@ class StudentInfo(models.Model):
 # HD Application
 class hdApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Drop Form')
-    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Clearance Form')
-    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Transfer Certificate')
-    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student HD Letter')
-    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student Grades')
-    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name='Student\'s Parent Signature')
+    studentDropform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Drop Form")
+    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Clearance Form")
+    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Transfer Certificate")
+    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student HD Letter")
+    studentGrades = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student Grades")
+    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=True, null=True, verbose_name="Student\'s Parent Signature")
     remarks = models.CharField(default="Submitted", max_length=25)
-    comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
-    hd_dateSubmitted = models.DateField(default=now, verbose_name='HD Date Submitted')
+    comment = models.TextField(max_length=150, null=True, blank=True, verbose_name="Feedback")
+    hd_dateSubmitted = models.DateField(default=now, verbose_name="HD Date Submitted")
 
     # dateApproved = models.DateTimeField()
     class Meta:
@@ -449,7 +450,7 @@ class spApplicant(models.Model):
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
 
     class Meta:
-        verbose_name_plural = "Studyplan Applicants"
+        verbose_name_plural = "Study Plan Applicants"
 
     def __str__(self):
         return self.studentID.studentUser.lastName
@@ -576,20 +577,44 @@ class hdTransferCert(models.Model):
 
 
 class loaClearanceForm(models.Model):
+    SemesterDropdown = [
+        ('1', 'First Semester'),
+        ('2', 'Second Semester')
+    ]
+
+    SchoolYearDropdown = []
+    for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
+        SchoolYearDropdown.append((y, y))
+
+    CollegeDropdown = [
+        ('1', 'CET'),
+        ('2', 'CEE')
+    ]
+
+    PurposeDropdown = [
+        ('1', 'Health Problems'),
+        ('2', 'Financila Problems'),
+        ('3', 'Employment Obligations'),
+        ('4', 'Depression'),
+        ('5', 'Academic Endesvors')
+    ]
+
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
-    firstEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (First Enrollment in PLM)", null=True)
-    studentFirstSY2 = models.CharField(max_length=100, verbose_name="School Year (First Enrollment in PLM)", null=True)
-    studentFirstCollege2 = models.CharField(max_length=100, verbose_name="College (First Enrollment in PLM)", null=True)
-    lastEnrollment2 = models.CharField(max_length=100, verbose_name="Semester (Last/Present Enrollment in PLM)",
+    firstEnrollment2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Semester (First Enrollment in PLM)", null=True)
+    studentFirstSY2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="School Year (First Enrollment in PLM)", null=True)
+    studentFirstCollege2 = models.CharField(max_length=100, choices=CollegeDropdown, verbose_name="College (First Enrollment in PLM)", null=True)
+    lastEnrollment2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Semester (Last/Present Enrollment in PLM)",
                                        null=True)
-    studentLastPCollege2 = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
+    studentLastPCollege2 = models.CharField(max_length=100, choices=CollegeDropdown, verbose_name="College (Last/Present Enrollment in PLM)",
                                             null=True)
-    studentLastPSY2 = models.CharField(max_length=100, verbose_name="School Year (Last/Present Enrollment in PLM)",
+    studentLastPSY2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="School Year (Last/Present Enrollment in PLM)",
                                        null=True)
-    studentPurpose2 = models.CharField(max_length=100, verbose_name="Purpose of Clearance", null=True)
+    studentPurpose2 = models.CharField(max_length=100, choices=PurposeDropdown, verbose_name="Purpose of Clearance", null=True)
     studentOthers2 = models.CharField(max_length=100, verbose_name="Student Others 2", blank=True, null=True)
     studentCurrentdate2 = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
+    class Meta:
+        verbose_name_plural = "LOA Clearance Forms"
 
 # LOA FORM
 class loaForm(models.Model):
@@ -602,6 +627,8 @@ class loaForm(models.Model):
     reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
+    class Meta:
+        verbose_name_plural = "LOA Forms"
 
 # HD Dropping Form
 class HD_DroppingForm(models.Model):
@@ -676,8 +703,8 @@ class studentScheduling(models.Model):
     ('Saturday','Saturday')
 )
     TYPE = (
-    ('Asychronous','Asychronous'),
-    ('Sychronous','Sychronous'),
+    ('Asynchronous','Asynchronous'),
+    ('Synchronous','Synchronous'),
 )
     instructor = ForeignKey(FacultyInfo,  null=True, verbose_name='Instructor', on_delete=models.SET_NULL,blank=True)
     subjectCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
@@ -788,6 +815,9 @@ class studyPlan(models.Model):
 
     def __str__(self):
         return self.studentinfo.studentID
+
+    class Meta:
+        verbose_name_plural = "Study Plans"
 
 class Notification(models.Model): 
     STATUS_CHOICES = (
