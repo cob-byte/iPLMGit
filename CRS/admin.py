@@ -173,7 +173,7 @@ class FacultyInfoAdmin(admin.ModelAdmin):
     def get_departmentID(self, obj):
         return obj.departmentID
 
-    get_departmentID.short_description = 'Department'
+    get_departmentID.short_description = 'Course'
 
     list_filter = [('departmentID',RelatedDropdownFilter)]
 
