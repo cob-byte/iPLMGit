@@ -596,7 +596,7 @@ class loaClearanceForm(models.Model):
         ('2', 'Financila Problems'),
         ('3', 'Employment Obligations'),
         ('4', 'Depression'),
-        ('5', 'Academic Endesvors')
+        ('5', 'Academic Endeavors')
     ]
 
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
@@ -618,13 +618,30 @@ class loaClearanceForm(models.Model):
 
 # LOA FORM
 class loaForm(models.Model):
+    SemesterDropdown = [
+        ('1', 'First Semester'),
+        ('2', 'Second Semester')
+    ]
+
+    SchoolYearDropdown = []
+    for y in range((datetime.datetime.now().year) - 3, (datetime.datetime.now().year) + 7):
+        SchoolYearDropdown.append((y, y))
+
+    PurposeDropdown = [
+        ('1', 'Health Problems'),
+        ('2', 'Financila Problems'),
+        ('3', 'Employment Obligations'),
+        ('4', 'Depression'),
+        ('5', 'Academic Endeavors')
+    ]
+
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     genave = models.DecimalField(decimal_places=2, max_digits=3, verbose_name="GWA", null=True)
-    sem = models.CharField(max_length=100, verbose_name="Effective From Sem", null=True)
-    sy = models.CharField(max_length=100, verbose_name="Effective From S.Y.", null=True)
-    sem2 = models.CharField(max_length=100, verbose_name="Effective Until Sem", null=True)
-    sy2 = models.CharField(max_length=100, verbose_name="Effective Until S.Y.", null=True)
-    reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
+    sem = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Effective From Sem", null=True)
+    sy = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="Effective From S.Y.", null=True)
+    sem2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Effective Until Sem", null=True)
+    sy2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="Effective Until S.Y.", null=True)
+    reason = models.CharField(max_length=100, choices=PurposeDropdown, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
     class Meta:
