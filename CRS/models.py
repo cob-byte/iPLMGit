@@ -348,9 +348,9 @@ class curriculumInfo(models.Model):
     schoolYear = models.CharField(max_length=100,choices=SchoolYear, verbose_name="School Year", null=True)
     schoolSem = models.CharField(max_length=100,choices=SchoolSem, verbose_name="School Sem", null=True)
     departmentID = models.ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL,
-                                     blank=True)
+                                     blank=False)
     subjectCode = models.ForeignKey(subjectInfo, null=True, verbose_name='Subject', on_delete=models.SET_NULL,
-                                    blank=True)
+                                    blank=False)
     blockCourse = models.CharField(max_length=100, verbose_name="Course", null=True)
     counted_in_GWA = models.BooleanField(default=True)
 
