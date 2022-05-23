@@ -805,9 +805,11 @@ class courseList(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
+        verbose_name_plural = "Course List"
         constraints = [
             models.UniqueConstraint(fields=['curricula', 'courseCode'], name='course_outline')
         ]
+         
 
     def __str__(self):
        return '%s: %s - %s' %(self.curricula.departmentID, self.courseCode, self.courseName)
