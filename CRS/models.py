@@ -789,6 +789,7 @@ class Curricula(models.Model):
     schoolYr = models.CharField(max_length=50, verbose_name="School Year", null=True, blank=True)
 
     class Meta:
+        verbose_name_plural = "Curricula"
         constraints = [
             models.UniqueConstraint(fields=['departmentID', 'cYear', 'cSem', 'schoolYr'], name='unique_curriculum')
         ]
