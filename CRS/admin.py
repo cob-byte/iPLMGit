@@ -565,7 +565,7 @@ admin.site.register(OjtApplicant, OjtApplicantAdmin)
 class spApplicantAdmin(admin.ModelAdmin):
     search_fields = ['studentID__studentID']
     model = spApplicant
-    list_display = ('get_id','course','studentID','FirstName','MiddleName','LastName','status','Applicationstatus')
+    list_display = ('get_id','course','studentID','get_fname','get_mname','get_lname','status','get_applicationstatus')
 
     def get_id(self, obj):
         return obj.id
@@ -576,21 +576,25 @@ class spApplicantAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def FirstName(self, obj):
+    def get_fname(self, obj):
         return obj.studentID.studentUser.firstName
+    get_fname.short_description = "First Name"
 
-    def MiddleName(self, obj):
+    def get_mname(self, obj):
         return obj.studentID.studentUser.middleName
-
-    def LastName(self, obj):
+    get_mname.short_description = "Middle Name"
+    
+    def get_lname(self, obj):
         return obj.studentID.studentUser.lastName
+    get_lname.short_description = "Last Name"
 
     def status(self, obj):
         return obj.studentID.studentRegStatus
 
-    def Applicationstatus(self, obj):
+    def get_applicationstatus(self, obj):
         return obj.remarks
-
+    get_applicationstatus.short_description = "Application Status"
+    
     list_filter = [('studentID',RelatedDropdownFilter),('studentID__departmentID__courseName',DropdownFilter),('remarks',DropdownFilter)]
 
 admin.site.register(spApplicant, spApplicantAdmin)

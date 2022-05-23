@@ -613,6 +613,8 @@ class loaClearanceForm(models.Model):
     studentOthers2 = models.CharField(max_length=100, verbose_name="Student Others 2", blank=True, null=True)
     studentCurrentdate2 = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
+    class Meta:
+        verbose_name_plural = "LOA Clearance Forms"
 
 # LOA FORM
 class loaForm(models.Model):
@@ -625,6 +627,8 @@ class loaForm(models.Model):
     reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
+    class Meta:
+        verbose_name_plural = "LOA Forms"
 
 # HD Dropping Form
 class HD_DroppingForm(models.Model):
@@ -811,6 +815,9 @@ class studyPlan(models.Model):
 
     def __str__(self):
         return self.studentinfo.studentID
+
+    class Meta:
+        verbose_name_plural = "Study Plans"
 
 class Notification(models.Model): 
     STATUS_CHOICES = (
