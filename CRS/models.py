@@ -31,7 +31,7 @@ CollegeDropdown = [
 
 PurposeDropdown = [
     ('1', 'Health Problems'),
-    ('2', 'Financila Problems'),
+    ('2', 'Financial Problems'),
     ('3', 'Employment Obligations'),
     ('4', 'Depression'),
     ('5', 'Academic Endeavors')
