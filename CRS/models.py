@@ -571,7 +571,7 @@ class hdClearanceForm(models.Model):
                                       null=True)
     studentLastPCollege = models.CharField(max_length=100, verbose_name="College (Last/Present Enrollment in PLM)",
                                            null=True)
-    studentLastPSY = models.CharField(max_length=100, verbose_name="School Year (Last/Present Enrollment in PLM)",
+    studentLastPSY = models.CharField(max_length=100, verbose_name="School year (Last/Present Enrollment in PLM)",
                                       null=True)
     studentPurpose = models.CharField(max_length=100, verbose_name="Purpose of Clearance", null=True)
     studentOthers = models.CharField(max_length=100, verbose_name="If you picked others please specify:", blank=True,
