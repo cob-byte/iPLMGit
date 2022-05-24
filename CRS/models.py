@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
@@ -5,9 +6,12 @@ from django.db.models.fields.related import ForeignKey, OneToOneField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import RegexValidator
+from django.forms import ValidationError
 from django.utils import timezone
-from django.db.models import JSONField, Model
+from django.contrib import messages
+
 import datetime
+import os
 
 now = timezone.now()
 
@@ -74,9 +78,9 @@ class User(AbstractBaseUser):
     firstName = models.CharField(max_length=100, verbose_name='First Name')
     middleName = models.CharField(max_length=100, blank=True, default=" ", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
-
+    
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
 
     is_chairperson = models.BooleanField(default=False)
     is_faculty = models.BooleanField(default=False)
@@ -208,7 +212,7 @@ class FacultyInfo(models.Model):
     facultyCitizenship = models.CharField(max_length=50, null=True, default='Filipino',verbose_name='Citizenship')
     facultyContact = models.CharField(validators=[phone_regex], max_length=50,
                                       null=True, verbose_name='Contact Number')
-    facultyIn = models.CharField(max_length=100, null=True, blank=True, verbose_name='Time In', default = "7 :00")
+    facultyIn = models.CharField(max_length=100, null=True, blank=True, verbose_name='Time In', default = "7:00")
     facultyOut = models.CharField(max_length=100, null=True, blank=True, verbose_name='Time Out', default = "22:00")
 
     class Meta:
@@ -634,9 +638,13 @@ class loaForm(models.Model):
 class HD_DroppingForm(models.Model):
     Admin_Upload = models.FileField(upload_to='Student/Dropping Form')
 
+    def __str__(self):
+        return '%s - %s '%(self.id, self.Admin_Upload.name)
+
     class Meta:
             verbose_name_plural = "HD Dropping Form"
 
+    
 
 # SHIFTER APPLICANT
 class ShifterApplicant(models.Model):

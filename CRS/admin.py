@@ -53,7 +53,6 @@ class UserChangeForm(forms.ModelForm):
         fields = ('email', 'password', 'firstName', 'middleName',
                   'lastName', 'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
 
-
 class FacultyInfoInline(admin.StackedInline):
     # To add fields from Faculty database to User creation in Admin Site
     model = FacultyInfo
@@ -839,7 +838,18 @@ class loaFormAdmin(admin.ModelAdmin):
 
 admin.site.register(loaForm, loaFormAdmin)
 
-admin.site.register(HD_DroppingForm)
+#Dropping Form
+class HD_DroppingFormAdmin(admin.ModelAdmin):
+    model = HD_DroppingForm
+    list_display = ('get_id', 'droppingforms')
+    search_fields = ['Admin_Upload']
+    def get_id(self, obj):
+        return obj.id
+
+    def droppingforms(self, obj):
+        return obj.Admin_Upload
+
+admin.site.register(HD_DroppingForm, HD_DroppingFormAdmin)
 
 #Study Plan
 class CurriculaAdmin(admin.ModelAdmin):
