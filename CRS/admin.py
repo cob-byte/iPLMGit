@@ -751,7 +751,7 @@ class hdClearanceFormAdmin(admin.ModelAdmin):
         return obj.studentID.studentUser.middleName
 
     def Last_Name(self, obj):
-        return obj.studentID.studentUser.middleName
+        return obj.studentID.studentUser.lastName
 
     list_filter = [('studentID',DropdownFilter)]
 
@@ -760,7 +760,7 @@ admin.site.register(hdClearanceForm, hdClearanceFormAdmin)
 
 class hdTransferCertAdmin(admin.ModelAdmin):
     model = hdTransferCert
-    list_display = ('get_id','studentID','firstname','MiddleName','LastName')
+    list_display = ('get_id','studentID','First_Name','Middle_Name','Last_Name')
 
     def get_id(self, obj):
         return obj.id
@@ -768,14 +768,14 @@ class hdTransferCertAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def firstname(self, obj):
+    def First_Name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
-        return obj.studentID.studentUser.middleName
+    def Last_Name(self, obj):
+        return obj.studentID.studentUser.lastName
 
     list_filter = [('studentID',DropdownFilter)]
 
@@ -785,7 +785,7 @@ admin.site.register(hdTransferCert, hdTransferCertAdmin)
 
 class loaClearanceFormAdmin(admin.ModelAdmin):
     model = loaClearanceForm
-    list_display = ('get_id','studentID','firstname','MiddleName','LastName')
+    list_display = ('get_id','studentID','First_Name','Middle_Name','Last_Name')
 
     def get_id(self, obj):
         return obj.id
@@ -793,14 +793,14 @@ class loaClearanceFormAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def firstname(self, obj):
+    def First_Name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
-        return obj.studentID.studentUser.middleName
+    def Last_Name(self, obj):
+        return obj.studentID.studentUser.lastName
 
     list_filter = [('studentID',DropdownFilter)]
 
@@ -810,7 +810,7 @@ admin.site.register(loaClearanceForm, loaClearanceFormAdmin)
 
 class loaFormAdmin(admin.ModelAdmin):
     model = loaForm
-    list_display = ('get_id','studentID','firstname','MiddleName','LastName')
+    list_display = ('get_id','studentID','First_Name','Middle_Name','Last_Name')
 
     def get_id(self, obj):
         return obj.id
@@ -818,14 +818,14 @@ class loaFormAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def firstname(self, obj):
+    def First_Name(self, obj):
         return obj.studentID.studentUser.firstName
 
-    def MiddleName(self, obj):
+    def Middle_Name(self, obj):
         return obj.studentID.studentUser.middleName
 
-    def LastName(self, obj):
-        return obj.studentID.studentUser.middleName
+    def Last_Name(self, obj):
+        return obj.studentID.studentUser.lastName
 
     list_filter = [('studentID',DropdownFilter)]
 
@@ -834,13 +834,13 @@ admin.site.register(loaForm, loaFormAdmin)
 #Dropping Form
 class HD_DroppingFormAdmin(admin.ModelAdmin):
     model = HD_DroppingForm
-    list_display = ('get_id', 'droppingforms')
+    list_display = ('get_id', 'dropping_forms')
     search_fields = ['Admin_Upload']
     def get_id(self, obj):
         return obj.id
 
-    def droppingforms(self, obj):
-        return obj.Admin_Upload
+    def dropping_forms(self, obj):
+        return obj.filename
 
 admin.site.register(HD_DroppingForm, HD_DroppingFormAdmin)
 

@@ -443,7 +443,7 @@ class hdApplicant(models.Model):
         verbose_name_plural = "HD Applicants"
 
     def __str__(self):
-        return self.studentID.studentUser.lastName
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
 
 # OJT Application
@@ -464,7 +464,7 @@ class OjtApplicant(models.Model):
         verbose_name_plural = "OJT Applicants"
 
     def __str__(self):
-        return self.studentID.studentUser.lastName
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
 
 class spApplicant(models.Model):
@@ -478,7 +478,7 @@ class spApplicant(models.Model):
         verbose_name_plural = "Study Plan Applicants"
 
     def __str__(self):
-        return self.studentID.studentUser.lastName
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
 
 class LOAApplicant(models.Model):
@@ -499,7 +499,7 @@ class LOAApplicant(models.Model):
         verbose_name_plural = "LOA Applicants"
 
     def __str__(self):
-        return self.studentID.studentUser.lastName
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
 
 class currchecklist(models.Model):
@@ -554,7 +554,7 @@ class crsGrade(models.Model):
             verbose_name_plural = "CRS Grades"
 
     def __str__(self):
-        return self.studentID.studentUser.lastName
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
 
 # FORMS TO FILL-UP
@@ -574,6 +574,9 @@ class hdClearanceForm(models.Model):
                                      null=True)
     studentCurrentdate = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
+    def __str__(self):
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
+    
     class Meta:
         verbose_name_plural = "HD Clearance Forms"
 
@@ -597,6 +600,9 @@ class hdTransferCert(models.Model):
     studentYear = models.CharField(max_length=100, verbose_name="Year", null=True)
     studentCurrentdate = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
+    def __str__(self):
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
+
     class Meta:
         verbose_name_plural = "HD Transfer Certificate"
 
@@ -617,6 +623,9 @@ class loaClearanceForm(models.Model):
     studentOthers2 = models.CharField(max_length=100, verbose_name="Student Others 2", blank=True, null=True)
     studentCurrentdate2 = models.DateField(max_length=100, verbose_name="Current Date", null=True)
 
+    def __str__(self):
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
+
     class Meta:
         verbose_name_plural = "LOA Clearance Forms"
 
@@ -636,6 +645,9 @@ class loaForm(models.Model):
     reason = models.CharField(max_length=100, choices=PurposeDropdown, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
+    def __str__(self):
+        return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
+
     class Meta:
         verbose_name_plural = "LOA Forms"
 
@@ -643,12 +655,16 @@ class loaForm(models.Model):
 class HD_DroppingForm(models.Model):
     Admin_Upload = models.FileField(upload_to='Student/Dropping Form')
 
+    @property
+    def filename(self):
+        return os.path.basename(self.Admin_Upload.name)
+
     def __str__(self):
-        return '%s - %s '%(self.id, self.Admin_Upload.name)
+        return '%s - %s '%(self.id, os.path.basename(self.Admin_Upload.name))
 
     class Meta:
             verbose_name_plural = "HD Dropping Form"
-
+    
     
 
 # SHIFTER APPLICANT
@@ -672,10 +688,9 @@ class ShifterApplicant(models.Model):
 
     class Meta:
         verbose_name_plural = "Shifter Applicants"
-
-    def str(self):
-        return '| %s  %s ' % (self.studentID, self.lname)
-
+        
+    def __str__(self):
+        return '%s - %s, %s '%(self.studentID, self.lname, self.fname)
 
 # TRANSFEREE APPLICANT
 class TransfereeApplicant(models.Model):
