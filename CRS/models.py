@@ -49,7 +49,7 @@ class College(models.Model):
 class UserManager(BaseUserManager):
     def create_user(self, email, firstName, middleName, lastName, password=None):
         """
-        Creates and saves a User with the given email, name and password.
+        Creates and saves a User with the given email, name, and password.
         """
         if not email:
             raise ValueError('Users must have an email address')
@@ -97,7 +97,7 @@ class User(AbstractBaseUser):
     )
     
     firstName = models.CharField(max_length=100, verbose_name='First Name')
-    middleName = models.CharField(max_length=100, blank=True, default=" ", verbose_name='Middle Name')
+    middleName = models.CharField(max_length=100, blank=False, default=" ", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
     
     is_active = models.BooleanField(default=True)
@@ -223,8 +223,8 @@ class FacultyInfo(models.Model):
     facultyUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Faculty User')
     facultyID = models.CharField(validators=[facultyID_regex], max_length=50,
                                  unique=True, verbose_name='Faculty ID', null=True)
-    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
-    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=True)
+    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
+    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
     facultyWorkstatus = models.CharField(max_length=100, choices=WorkStatus_CHOICES,
                                          null=True, verbose_name='Work Status')
     facultyGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
@@ -233,8 +233,8 @@ class FacultyInfo(models.Model):
     facultyCitizenship = models.CharField(max_length=50, null=True, default='Filipino',verbose_name='Citizenship')
     facultyContact = models.CharField(validators=[phone_regex], max_length=50,
                                       null=True, verbose_name='Contact Number')
-    facultyIn = models.CharField(max_length=100, null=True, blank=True, verbose_name='Time In', default = "7:00")
-    facultyOut = models.CharField(max_length=100, null=True, blank=True, verbose_name='Time Out', default = "22:00")
+    facultyIn = models.CharField(max_length=100, null=True, blank=False, verbose_name='Time In', default = "7:00")
+    facultyOut = models.CharField(max_length=100, null=True, blank=False, verbose_name='Time Out', default = "22:00")
 
     class Meta:
         verbose_name_plural = "Faculty Information"
@@ -399,8 +399,8 @@ class StudentInfo(models.Model):
     studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')
     studentID = models.CharField(validators=[studentID_regex], max_length=50, unique=True, verbose_name='Student ID',
                                  null=True)
-    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
-    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=True)
+    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
+    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
     studentGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
     studentCitizenship = models.CharField(max_length=50, null=True,default='Filipino', verbose_name='Citizenship')
     studentCivilstatus = models.CharField(max_length=150, null=True, choices=CivilStatus_CHOICES,
@@ -412,7 +412,7 @@ class StudentInfo(models.Model):
     studentCourse = models.CharField(max_length=50, null=True, verbose_name='Course')
     studentYearlevel = models.CharField(max_length=150, null=True, choices=Year_CHOICES, verbose_name='Year Level')
     studentSection = models.ForeignKey(BlockSection, null=True, verbose_name='Section', on_delete=models.SET_NULL,
-                                       blank=True)
+                                       blank=False)
     studentCurriculum = models.CharField(validators=[curr_regex], max_length=50, verbose_name='Curriculum Year',
                                          null=True)
 
