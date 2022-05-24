@@ -172,7 +172,7 @@ class FacultyInfoAdmin(admin.ModelAdmin):
     def get_departmentID(self, obj):
         return obj.departmentID
 
-    get_departmentID.short_description = 'Department'
+    get_departmentID.short_description = 'Course'
 
     list_filter = [('departmentID',RelatedDropdownFilter)]
 
@@ -703,7 +703,7 @@ admin.site.register(TransfereeApplicant, TransfereeApplicantAdmin)
 # FACULTY APPLICANT
 class FacultyApplicantAdmin(admin.ModelAdmin):
     model = FacultyInfo
-    list_display = ('get_id', 'get_email', 'get_fname', 'get_lname', 'get_mname', 'get_department')
+    list_display = ('get_id', 'get_email', 'get_fname', 'get_lname', 'get_mname')
 
     def get_email(self, obj):
         return obj.email
@@ -728,13 +728,6 @@ class FacultyApplicantAdmin(admin.ModelAdmin):
         return obj.middleName
 
     get_mname.short_description = 'Middle Name'
-
-    def get_department(self, obj):
-        return obj.department
-
-    get_department.short_description = 'department'
-
-    list_filter = [('department',DropdownFilter)]
     
 admin.site.register(FacultyApplicant, FacultyApplicantAdmin),
 

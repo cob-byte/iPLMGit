@@ -15,6 +15,27 @@ import os
 
 now = timezone.now()
 
+SemesterDropdown = [
+    ('1', 'First Semester'),
+    ('2', 'Second Semester')
+]
+
+SchoolYearDropdown = []
+for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
+    SchoolYearDropdown.append((y, y))
+
+CollegeDropdown = [
+    ('1', 'CET'),
+    ('2', 'CEE')
+]
+
+PurposeDropdown = [
+    ('1', 'Health Problems'),
+    ('2', 'Financila Problems'),
+    ('3', 'Employment Obligations'),
+    ('4', 'Depression'),
+    ('5', 'Academic Endeavors')
+]
 
 class College(models.Model):
     collegeName = models.CharField(max_length=150, null=True, verbose_name='College Name')
@@ -331,9 +352,9 @@ class curriculumInfo(models.Model):
     schoolYear = models.CharField(max_length=100,choices=SchoolYear, verbose_name="School Year", null=True)
     schoolSem = models.CharField(max_length=100,choices=SchoolSem, verbose_name="School Sem", null=True)
     departmentID = models.ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL,
-                                     blank=True)
+                                     blank=False)
     subjectCode = models.ForeignKey(subjectInfo, null=True, verbose_name='Subject', on_delete=models.SET_NULL,
-                                    blank=True)
+                                    blank=False)
     blockCourse = models.CharField(max_length=100, verbose_name="Course", null=True)
     counted_in_GWA = models.BooleanField(default=True)
 
@@ -581,28 +602,7 @@ class hdTransferCert(models.Model):
 
 
 class loaClearanceForm(models.Model):
-    SemesterDropdown = [
-        ('1', 'First Semester'),
-        ('2', 'Second Semester')
-    ]
-
-    SchoolYearDropdown = []
-    for y in range((datetime.datetime.now().year) - 5, (datetime.datetime.now().year) + 1):
-        SchoolYearDropdown.append((y, y))
-
-    CollegeDropdown = [
-        ('1', 'CET'),
-        ('2', 'CEE')
-    ]
-
-    PurposeDropdown = [
-        ('1', 'Health Problems'),
-        ('2', 'Financila Problems'),
-        ('3', 'Employment Obligations'),
-        ('4', 'Depression'),
-        ('5', 'Academic Endesvors')
-    ]
-
+    
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     firstEnrollment2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Semester (First Enrollment in PLM)", null=True)
     studentFirstSY2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="School Year (First Enrollment in PLM)", null=True)
@@ -622,13 +622,18 @@ class loaClearanceForm(models.Model):
 
 # LOA FORM
 class loaForm(models.Model):
+
+    SchoolYearDropdown = []
+    for y in range((datetime.datetime.now().year) - 2, (datetime.datetime.now().year) + 7):
+        SchoolYearDropdown.append((y, y))
+
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE)
     genave = models.DecimalField(decimal_places=2, max_digits=3, verbose_name="GWA", null=True)
-    sem = models.CharField(max_length=100, verbose_name="Effective From Sem", null=True)
-    sy = models.CharField(max_length=100, verbose_name="Effective From S.Y.", null=True)
-    sem2 = models.CharField(max_length=100, verbose_name="Effective Until Sem", null=True)
-    sy2 = models.CharField(max_length=100, verbose_name="Effective Until S.Y.", null=True)
-    reason = models.CharField(max_length=100, verbose_name="Reason", blank=True, null=True)
+    sem = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Effective From Sem", null=True)
+    sy = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="Effective From S.Y.:", null=True)
+    sem2 = models.CharField(max_length=100, choices=SemesterDropdown, verbose_name="Effective Until Sem", null=True)
+    sy2 = models.IntegerField(max_length=4, choices=SchoolYearDropdown, default=datetime.datetime.now().year, verbose_name="Effective Until S.Y.:", null=True)
+    reason = models.CharField(max_length=100, choices=PurposeDropdown, verbose_name="Reason", blank=True, null=True)
     dof = models.DateField(max_length=100, verbose_name="Date of Filing", null=True)
 
     class Meta:
@@ -792,6 +797,7 @@ class Curricula(models.Model):
     schoolYr = models.CharField(max_length=50, verbose_name="School Year", null=True, blank=True)
 
     class Meta:
+        verbose_name_plural = "Curricula"
         constraints = [
             models.UniqueConstraint(fields=['departmentID', 'cYear', 'cSem', 'schoolYr'], name='unique_curriculum')
         ]
@@ -808,9 +814,11 @@ class courseList(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
+        verbose_name_plural = "Course List"
         constraints = [
             models.UniqueConstraint(fields=['curricula', 'courseCode'], name='course_outline')
         ]
+         
 
     def __str__(self):
        return '%s: %s - %s' %(self.curricula.departmentID, self.courseCode, self.courseName)
