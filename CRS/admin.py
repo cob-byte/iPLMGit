@@ -672,7 +672,7 @@ admin.site.register(ShifterApplicant, ShifterApplicantAdmin)
 class TransfereeApplicantAdmin(admin.ModelAdmin):
     search_fields = ['studentID', 'lname', 'fname', 'mname','eadd']
     model = TransfereeApplicant
-    list_display = ('get_id','course','studentID','FirstName','MiddleName','LastName','Applicationstatus')
+    list_display = ('get_id','course','studentID','get_fname','get_mname','get_lname','get_Applicationstatus')
 
     def get_id(self, obj):
         return obj.id
@@ -683,17 +683,25 @@ class TransfereeApplicantAdmin(admin.ModelAdmin):
     def studentID(self, obj):
         return obj.studentID
 
-    def FirstName(self, obj):
+    def get_fname(self, obj):
         return obj.fname
 
-    def MiddleName(self, obj):
+    get_fname.short_description = 'First Name'
+
+    def get_mname(self, obj):
         return obj.mname
 
-    def LastName(self, obj):
+    get_mname.short_description = 'Middle Name'
+
+    def get_lname(self, obj):
         return obj.lname
 
-    def Applicationstatus(self, obj):
+    get_lname.short_description = 'Last Name'
+
+    def get_Applicationstatus(self, obj):
         return obj.remarks
+
+    get_Applicationstatus.short_description = 'Application Status'
 
     list_filter = [('studentID',DropdownFilter),('remarks',DropdownFilter)]
 
