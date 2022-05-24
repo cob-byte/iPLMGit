@@ -396,9 +396,13 @@ class StudentInfo(models.Model):
         message=curr_error_message
     )
 
+    def sid_default():
+        year = '2020'
+        return year
+
     studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')
     studentID = models.CharField(validators=[studentID_regex], max_length=50, unique=True, verbose_name='Student ID',
-                                 null=True)
+                                 null=True, default = sid_default)
     collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
     departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
     studentGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
