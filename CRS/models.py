@@ -506,7 +506,7 @@ class StudentInfo(models.Model):
 
 # HD Application
 class hdApplicant(models.Model):
-    studentID = models.ForeignKey(StudentInfo, null=False, verbose_name='Student', on_delete=models.CASCADE, blank=True)
+    studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=False)
     studentDropform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Drop Form")
     studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Clearance Form")
     studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Transfer Certificate")
