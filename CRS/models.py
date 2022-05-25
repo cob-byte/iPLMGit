@@ -128,7 +128,7 @@ class User(AbstractBaseUser):
         """Does the user have permissions to view the app `app_label`?"""
         # Simplest possible answer: Yes, always
         return True
-
+    
     @property
     def is_staff(self):
         """Is the user a member of staff?"""
@@ -140,6 +140,7 @@ class User(AbstractBaseUser):
 
     class Meta:
          verbose_name = "User"
+
 
 # Do not remove or modify the above users ^^
 
@@ -156,7 +157,7 @@ class AcademicYearInfo(models.Model):
     semester = models.CharField(max_length=150, null=True, verbose_name='Semester')
 
     class Meta:
-            verbose_name_plural = "Academic Year Information"
+            verbose_name = "Academic Year Information"
 
     def __str__(self):
         return '%s - %s' % (self.yearstarted, self.yearended)
@@ -167,7 +168,7 @@ class ChairpersonInfo (models.Model):
     cpersonUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name="Chairperson User")
 
     class Meta:
-        verbose_name_plural = "Chairperson Information"
+        verbose_name = "Chairperson Information"
     
     def __str__(self):
         return self.cpersonUser.email
@@ -279,7 +280,7 @@ class FacultyInfo(models.Model):
     facultyOut = models.CharField(max_length=100, null=True, blank=False, verbose_name='Time Out', default = "22:00")
 
     class Meta:
-        verbose_name_plural = "Faculty Information"
+        verbose_name = "Faculty Information"
 
     def __str__(self):
        return '%s - %s, %s - (%s) '%(self.facultyUser.id, self.facultyUser.lastName, self.facultyUser.firstName,self.facultyWorkstatus)
@@ -303,7 +304,7 @@ class BlockSection(models.Model):
     adviser = models.ForeignKey(FacultyInfo, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
-        verbose_name_plural = "Block Sections"
+        verbose_name = "Block Section"
         constraints =[models.UniqueConstraint(fields=['blockYear', 'blockSection','blockCourse'], name='block section')]
 
     def __str__(self):
@@ -319,7 +320,7 @@ class RoomSchedule(models.Model):
     classDay = models.CharField(max_length=200, choices=Day, null=True)
 
     class Meta:
-        verbose_name_plural = "Room Schedules"
+        verbose_name = "Room Schedule"
 
     def __str__(self):
         return self.classDay
@@ -329,7 +330,7 @@ class RoomInfo(models.Model):
     room = models.CharField(max_length=100, null=True, verbose_name='Room',unique=True)
 
     class Meta:
-        verbose_name_plural = "Room Information"
+        verbose_name = "Room Information"
 
     def __str__(self):
         return self.room
@@ -343,7 +344,7 @@ class subjectInfo(models.Model):
     college = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
 
     class Meta:
-        verbose_name_plural = "Subject Information"
+        verbose_name = "Subject Information"
         constraints =[models.UniqueConstraint(fields=['subjectCode', 'subjectName','college'], name='subject')]
 
     def __str__(self):
@@ -368,7 +369,7 @@ class SubjectSchedule(models.Model):
     yearStanding = models.CharField(max_length=200, choices=YearStand, null=True)
 
     class Meta:
-        verbose_name_plural = "Subject Schedules"
+        verbose_name = "Subject Schedule"
 
     def __str__(self):
         return self.status
@@ -401,7 +402,7 @@ class curriculumInfo(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name_plural = "Curriculum Information"
+        verbose_name = "Curriculum Information"
         constraints = [models.UniqueConstraint(fields=['curriculumyear', 'schoolYear','schoolSem','departmentID','subjectCode'], name='curriculum')]
 
     def __str__(self):
@@ -497,7 +498,7 @@ class StudentInfo(models.Model):
     # advisoryClasscode = ForeignKey(advisoryClass, null=True, verbose_name='Class Advisory', on_delete=DO_NOTHING)
 
     class Meta:
-        verbose_name_plural = "Student Information"
+        verbose_name = "Student Information"
     
     def __str__(self):
         return '%s - %s' %(self.studentUser.id, self.studentID)
@@ -518,7 +519,7 @@ class hdApplicant(models.Model):
 
     # dateApproved = models.DateTimeField()
     class Meta:
-        verbose_name_plural = "HD Applicants"
+        verbose_name = "HD Applicant"
 
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
@@ -539,7 +540,7 @@ class OjtApplicant(models.Model):
     ojt_dateSubmitted = models.DateField(default=now, verbose_name='OJT Date Submitted')
 
     class Meta:
-        verbose_name_plural = "OJT Applicants"
+        verbose_name = "OJT Applicant"
 
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
@@ -553,7 +554,7 @@ class spApplicant(models.Model):
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
 
     class Meta:
-        verbose_name_plural = "Study Plan Applicants"
+        verbose_name = "Study Plan Applicant"
 
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
@@ -574,7 +575,7 @@ class LOAApplicant(models.Model):
 
     # dateApproved = models.DateTimeField()
     class Meta:
-        verbose_name_plural = "LOA Applicants"
+        verbose_name= "LOA Applicant"
 
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
@@ -616,7 +617,7 @@ class currchecklist(models.Model):
     semTaken = models.CharField(max_length=50, choices=SEMESTER, verbose_name="School Sem", null=True)
 
     class Meta:
-            verbose_name_plural = "Checklists"
+            verbose_name = "Checklist"
 
     def __str__(self):
         return self.owner.studentUser.lastName
@@ -629,7 +630,7 @@ class crsGrade(models.Model):
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
     class Meta:
-            verbose_name_plural = "CRS Grades"
+            verbose_name = "CRS Grade"
 
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
@@ -656,7 +657,7 @@ class hdClearanceForm(models.Model):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
     
     class Meta:
-        verbose_name_plural = "HD Clearance Forms"
+        verbose_name = "HD Clearance Form"
 
 
 class hdTransferCert(models.Model):
@@ -682,7 +683,7 @@ class hdTransferCert(models.Model):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
     class Meta:
-        verbose_name_plural = "HD Transfer Certificate"
+        verbose_name = "HD Transfer Certificate"
 
 
 class loaClearanceForm(models.Model):
@@ -705,7 +706,7 @@ class loaClearanceForm(models.Model):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
     class Meta:
-        verbose_name_plural = "LOA Clearance Forms"
+        verbose_name = "LOA Clearance Form"
 
 # LOA FORM
 class loaForm(models.Model):
@@ -727,7 +728,7 @@ class loaForm(models.Model):
         return '%s - %s, %s '%(self.studentID, self.studentID.studentUser.lastName, self.studentID.studentUser.firstName)
 
     class Meta:
-        verbose_name_plural = "LOA Forms"
+        verbose_name = "LOA Form"
 
 # HD Dropping Form
 class HD_DroppingForm(models.Model):
@@ -741,7 +742,7 @@ class HD_DroppingForm(models.Model):
         return '%s - %s '%(self.id, os.path.basename(self.Admin_Upload.name))
 
     class Meta:
-            verbose_name_plural = "HD Dropping Form"
+            verbose_name = "HD Dropping Form"
     
     
 
@@ -765,7 +766,7 @@ class ShifterApplicant(models.Model):
     # dateApproved = models.DateTimeField()
 
     class Meta:
-        verbose_name_plural = "Shifter Applicants"
+        verbose_name = "Shifter Applicant"
         
     def __str__(self):
         return '%s - %s, %s '%(self.studentID, self.lname, self.fname)
@@ -792,7 +793,7 @@ class TransfereeApplicant(models.Model):
     # dateApproved = models.DateTimeField()
 
     class Meta:
-        verbose_name_plural = "Transferee Applicants"
+        verbose_name = "Transferee Applicant"
 
     def str(self):
         return '| %s  %s ' % (self.studentID, self.lname)
@@ -830,7 +831,7 @@ class studentScheduling(models.Model):
     realsection= models.ForeignKey(BlockSection, null=True, verbose_name='Block Section', on_delete=models.SET_NULL,blank=True)
 
     class Meta:
-        verbose_name_plural = "Student Scheduling"
+        verbose_name = "Student Scheduling"
 
 
 # --------------------------- Faculty Applicant Database ---------------------------------------
@@ -854,7 +855,7 @@ class FacultyApplicant(models.Model):
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
     class Meta:
-        verbose_name_plural = "Faculty Applicants"
+        verbose_name = "Faculty Applicant"
 
     def __str__(self):
         return self.email
@@ -914,7 +915,7 @@ class courseList(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name_plural = "Course List"
+        verbose_name = "Course List"
         constraints = [
             models.UniqueConstraint(fields=['curricula', 'courseCode'], name='course_outline')
         ]
@@ -933,7 +934,7 @@ class studyPlan(models.Model):
         return self.studentinfo.studentID
 
     class Meta:
-        verbose_name_plural = "Study Plans"
+        verbose_name = "Study Plan"
 
 class Notification(models.Model): 
     STATUS_CHOICES = (
