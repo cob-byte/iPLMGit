@@ -1,3 +1,4 @@
+from http.client import HTTPS_PORT
 from django import forms
 from django.contrib import admin
 from django.contrib.auth.models import Group
@@ -6,6 +7,7 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 from django_admin_listfilter_dropdown.filters import ( DropdownFilter, ChoiceDropdownFilter, RelatedDropdownFilter )
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 from .models import *
 
@@ -50,8 +52,6 @@ class UserCreationForm(forms.ModelForm):
         if is_chairperson and is_student:
             raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
 
-        return True
-
     def save(self, commit=True):
         # Save the provided password in hashed format
         user = super().save(commit=False)
@@ -88,8 +88,6 @@ class UserChangeForm(forms.ModelForm):
 
         if is_chairperson and is_student:
             raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
-
-        return True
 
 class FacultyInfoInline(admin.StackedInline):
     # To add fields from Faculty database to User creation in Admin Site
