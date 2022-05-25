@@ -134,6 +134,8 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.email
 
+    class Meta:
+         verbose_name = "User"
 
 # Do not remove or modify the above users ^^
 
