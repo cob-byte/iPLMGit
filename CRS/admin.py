@@ -23,7 +23,7 @@ class UserCreationForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ('email', 'firstName', 'middleName', 'lastName')
+        fields = ('email', 'firstName', 'middleName', 'lastName', 'is_student', 'is_faculty', 'is_chairperson', 'is_admin')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -32,6 +32,25 @@ class UserCreationForm(forms.ModelForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError("Passwords don't match")
         return password2
+
+    def clean(self):
+        is_student = self.cleaned_data.get('is_student')
+        is_admin = self.cleaned_data.get('is_admin')
+        is_faculty = self.cleaned_data.get('is_faculty')
+        is_chairperson = self.cleaned_data.get('is_chairperson')
+        if not is_student and not is_faculty and not is_chairperson and not is_admin:
+            raise ValidationError('Please select at least one(1) permission before proceeding')
+        
+        if is_admin and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+        
+        if is_faculty and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+
+        if is_chairperson and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+
+        return True
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -52,6 +71,25 @@ class UserChangeForm(forms.ModelForm):
         model = User
         fields = ('email', 'password', 'firstName', 'middleName',
                   'lastName', 'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
+    
+    def clean(self):
+        is_student = self.cleaned_data.get('is_student')
+        is_admin = self.cleaned_data.get('is_admin')
+        is_faculty = self.cleaned_data.get('is_faculty')
+        is_chairperson = self.cleaned_data.get('is_chairperson')
+        if not is_student and not is_faculty and not is_chairperson and not is_admin:
+            raise ValidationError('Please select at least one(1) permission before proceeding')
+        
+        if is_admin and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+        
+        if is_faculty and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+
+        if is_chairperson and is_student:
+            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+
+        return True
 
 class FacultyInfoInline(admin.StackedInline):
     # To add fields from Faculty database to User creation in Admin Site

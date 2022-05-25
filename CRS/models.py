@@ -1,3 +1,4 @@
+from tkinter import Entry
 from django import forms
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
@@ -9,6 +10,9 @@ from django.core.validators import RegexValidator
 from django.forms import ValidationError
 from django.utils import timezone
 from django.contrib import messages
+from datetime import date
+from dis import findlabels
+
 
 import datetime
 import os
@@ -222,9 +226,45 @@ class FacultyInfo(models.Model):
         message=phone_error_message
     )
 
+    def fid_default():
+        year = date.today().year
+        id = FacultyInfo.objects.latest('facultyUser_id')
+        fetch = str(id)
+        final = fetch.split()[0].strip()
+        f_id = int(final)
+        overOneThousand = 0
+        lengthFacultyId = 0
+        stringFacultyID = str(f_id)
+        stringOverOneThousand = str(overOneThousand)
+        finalFacultyID = ''
+        lengthFacultyId = len(stringFacultyID)
+
+        def lengthOfRawFacultyId(lengthOfID ,rawFacultyId):
+            fiveDigitFacultyId = ''
+            if lengthOfID == 1:
+                fiveDigitFacultyId = '000' + rawFacultyId
+            elif lengthOfID == 2:
+                fiveDigitFacultyId = '00' + rawFacultyId
+            elif lengthOfID == 3:
+                fiveDigitFacultyId = '0' + rawFacultyId
+            return fiveDigitFacultyId
+
+        if f_id > 1000:
+            while f_id >= 1000:
+                f_id += 1
+                f_id -= 1000
+            stringOverOneThousand = str(overOneThousand)
+            stringFacultyID = str(f_id)
+            lengthFacultyId = len(stringFacultyID)
+            finalFacultyID = str(year) + stringOverOneThousand + lengthOfRawFacultyId(lengthFacultyId, stringFacultyID)
+        else:
+            finalFacultyID = str(year) + stringOverOneThousand + lengthOfRawFacultyId(lengthFacultyId, stringFacultyID)
+        
+        return finalFacultyID
+
     facultyUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Faculty User')
     facultyID = models.CharField(validators=[facultyID_regex], max_length=50,
-                                 unique=True, verbose_name='Faculty ID', null=True)
+                                 unique=True, verbose_name='Faculty ID', null=True, default=fid_default)
     collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
     departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
     facultyWorkstatus = models.CharField(max_length=100, choices=WorkStatus_CHOICES,
@@ -242,7 +282,7 @@ class FacultyInfo(models.Model):
         verbose_name_plural = "Faculty Information"
 
     def __str__(self):
-       return '%s, %s - (%s) '%(self.facultyUser.lastName, self.facultyUser.firstName,self.facultyWorkstatus)
+       return '%s - %s, %s - (%s) '%(self.facultyUser.id, self.facultyUser.lastName, self.facultyUser.firstName,self.facultyWorkstatus)
 
 class BlockSection(models.Model):
     Year_CHOICES = (
@@ -267,7 +307,7 @@ class BlockSection(models.Model):
         constraints =[models.UniqueConstraint(fields=['blockYear', 'blockSection','blockCourse'], name='block section')]
 
     def __str__(self):
-        return '%s %s - %s' %(self.blockCourse,self.blockYear, self.blockSection)
+        return '%s %s - %s' %(self.blockCourse, self.blockYear, self.blockSection)
 
 
 # ------------------ Curriculum and Subjects----------------------------------------------------
@@ -369,7 +409,7 @@ class curriculumInfo(models.Model):
 
 
 # --------------------------- Student Database-----------------------------------------
-class StudentInfo(models.Model):
+class StudentInfo(models.Model):    
     Type_CHOICES = (('Old', 'Old'), ('New', 'New'),)
     Status_CHOICES = (('Regular', 'Regular'), ('Irregular', 'Irregular'),)
 
@@ -380,7 +420,7 @@ class StudentInfo(models.Model):
     Year_CHOICES = (('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'),)
 
     # ID number code. Can be copy pasted to suit ID code for certain user.
-    studentID_error_message = 'Faculty ID must be entered in format: 20XXXXXXX'
+    studentID_error_message = 'Student ID must be entered in format: 20XXXXXXX'
     studentID_regex = RegexValidator(
         regex=r'^20\d{7}$',
         message=studentID_error_message
@@ -399,8 +439,40 @@ class StudentInfo(models.Model):
     )
 
     def sid_default():
-        year = '2020'
-        return year
+        year = date.today().year
+        id = StudentInfo.objects.latest('studentUser_id')
+        fetch = str(id)
+        final = fetch.split()[0].strip()
+        s_id = int(final)
+        overOneThousand = 0
+        lengthStudentId = 0
+        stringStudentID = str(s_id)
+        stringOverOneThousand = str(overOneThousand)
+        finalStudentID = ''
+        lengthStudentId = len(stringStudentID)
+
+        def lengthOfRawStudentId(lengthOfID ,rawStudentId):
+            fiveDigitStudentId = ''
+            if lengthOfID == 1:
+                fiveDigitStudentId = '000' + rawStudentId
+            elif lengthOfID == 2:
+                fiveDigitStudentId = '00' + rawStudentId
+            elif lengthOfID == 3:
+                fiveDigitStudentId = '0' + rawStudentId
+            return fiveDigitStudentId
+
+        if s_id > 1000:
+            while s_id >= 1000:
+                s_id += 1
+                s_id -= 1000
+            stringOverOneThousand = str(overOneThousand)
+            stringStudentID = str(s_id)
+            lengthStudentId = len(stringStudentID)
+            finalStudentID = str(year) + stringOverOneThousand + lengthOfRawStudentId(lengthStudentId, stringStudentID)
+        else:
+            finalStudentID = str(year) + stringOverOneThousand + lengthOfRawStudentId(lengthStudentId, stringStudentID)
+        
+        return finalStudentID
 
     studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')
     studentID = models.CharField(validators=[studentID_regex], max_length=50, unique=True, verbose_name='Student ID',
@@ -426,9 +498,9 @@ class StudentInfo(models.Model):
 
     class Meta:
         verbose_name_plural = "Student Information"
-
+    
     def __str__(self):
-        return self.studentID
+        return '%s - %s' %(self.studentUser.id, self.studentID)
 
 
 # HD Application
@@ -740,9 +812,16 @@ class studentScheduling(models.Model):
     ('Asynchronous','Asynchronous'),
     ('Synchronous','Synchronous'),
 )
+
+    def svalidate(value):
+        if value <= 0:
+            raise ValidationError(
+                ('Section cannot be <= 0')
+            )
+
     instructor = ForeignKey(FacultyInfo,  null=True, verbose_name='Instructor', on_delete=models.SET_NULL,blank=True)
     subjectCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
-    section = models.IntegerField(null=True,verbose_name='Subject Section' )
+    section = models.IntegerField(null=False, blank=False, verbose_name='Subject Section', validators=[svalidate])
     day = models.CharField(max_length=100, null=True, choices=MONTH, verbose_name='Day')
     timeStart = models.TimeField(verbose_name='Time Start')
     timeEnd = models.TimeField(verbose_name='Time End')
