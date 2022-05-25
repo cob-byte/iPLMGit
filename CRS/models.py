@@ -822,7 +822,7 @@ class studentScheduling(models.Model):
 
     instructor = ForeignKey(FacultyInfo,  null=True, verbose_name='Instructor', on_delete=models.SET_NULL,blank=True)
     subjectCode = models.ForeignKey(curriculumInfo, null=True, verbose_name='Subjects', on_delete=models.CASCADE)
-    section = models.IntegerField(null=False, blank=False, verbose_name='Subject Section', validators=[svalidate])
+    section = models.IntegerField(null=True, blank=False, verbose_name='Subject Section', validators=[svalidate])
     day = models.CharField(max_length=100, null=True, choices=MONTH, verbose_name='Day')
     timeStart = models.TimeField(verbose_name='Time Start')
     timeEnd = models.TimeField(verbose_name='Time End')
