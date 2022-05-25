@@ -562,7 +562,7 @@ admin.site.register(OjtApplicant, OjtApplicantAdmin)
 
 # SP STUDENT APPLICANT
 class spApplicantAdmin(admin.ModelAdmin):
-    search_fields = ['studentID__studentID']
+    search_fields = ['studentID__studentID', 'studentID__studentUser__firstName', 'studentID__studentUser__lastName']
     model = spApplicant
     list_display = ('get_id','course','studentID','get_fname','get_mname','get_lname','status','get_applicationstatus')
 
