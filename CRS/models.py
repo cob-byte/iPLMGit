@@ -157,7 +157,7 @@ class AcademicYearInfo(models.Model):
     semester = models.CharField(max_length=150, null=True, verbose_name='Semester')
 
     class Meta:
-            verbose_name = "Academic Year Information"
+            verbose_name_plural = "Academic Year Information"
 
     def __str__(self):
         return '%s - %s' % (self.yearstarted, self.yearended)
@@ -168,7 +168,7 @@ class ChairpersonInfo (models.Model):
     cpersonUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name="Chairperson User")
 
     class Meta:
-        verbose_name = "Chairperson Information"
+        verbose_name_plural = "Chairperson Information"
     
     def __str__(self):
         return self.cpersonUser.email
@@ -280,7 +280,7 @@ class FacultyInfo(models.Model):
     facultyOut = models.CharField(max_length=100, null=True, blank=False, verbose_name='Time Out', default = "22:00")
 
     class Meta:
-        verbose_name = "Faculty Information"
+        verbose_name_plural = "Faculty Information"
 
     def __str__(self):
        return '%s - %s, %s - (%s) '%(self.facultyUser.id, self.facultyUser.lastName, self.facultyUser.firstName,self.facultyWorkstatus)
@@ -330,7 +330,7 @@ class RoomInfo(models.Model):
     room = models.CharField(max_length=100, null=True, verbose_name='Room',unique=True)
 
     class Meta:
-        verbose_name = "Room Information"
+        verbose_name_plural = "Room Information"
 
     def __str__(self):
         return self.room
@@ -344,7 +344,7 @@ class subjectInfo(models.Model):
     college = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=True)
 
     class Meta:
-        verbose_name = "Subject Information"
+        verbose_name_plural = "Subject Information"
         constraints =[models.UniqueConstraint(fields=['subjectCode', 'subjectName','college'], name='subject')]
 
     def __str__(self):
@@ -402,7 +402,7 @@ class curriculumInfo(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Curriculum Information"
+        verbose_name_plural = "Curriculum Information"
         constraints = [models.UniqueConstraint(fields=['curriculumyear', 'schoolYear','schoolSem','departmentID','subjectCode'], name='curriculum')]
 
     def __str__(self):
@@ -498,7 +498,7 @@ class StudentInfo(models.Model):
     # advisoryClasscode = ForeignKey(advisoryClass, null=True, verbose_name='Class Advisory', on_delete=DO_NOTHING)
 
     class Meta:
-        verbose_name = "Student Information"
+        verbose_name_plural = "Student Information"
     
     def __str__(self):
         return '%s - %s' %(self.studentUser.id, self.studentID)
@@ -831,7 +831,7 @@ class studentScheduling(models.Model):
     realsection= models.ForeignKey(BlockSection, null=True, verbose_name='Block Section', on_delete=models.SET_NULL,blank=True)
 
     class Meta:
-        verbose_name = "Student Scheduling"
+        verbose_name_plural = "Student Scheduling"
 
 
 # --------------------------- Faculty Applicant Database ---------------------------------------
@@ -915,7 +915,7 @@ class courseList(models.Model):
     counted_in_GWA = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Course List"
+        verbose_name_plural = "Course List"
         constraints = [
             models.UniqueConstraint(fields=['curricula', 'courseCode'], name='course_outline')
         ]
