@@ -1,4 +1,4 @@
-#!c:\users\vea\desktop\iplm-master\env\scripts\python.exe
+#!C:\Users\migo\GitHub\iPLMGit\env\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'future==0.18.2','console_scripts','futurize'
 import re
 import sys
