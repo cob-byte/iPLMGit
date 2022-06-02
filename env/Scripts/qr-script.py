@@ -1,4 +1,4 @@
-#!C:\Users\migo\GitHub\iPLMGit\env\Scripts\python.exe
+#!C:\Users\User\Desktop\iPLMMain\iPLMGit\env\Scripts\python.exe
 # EASY-INSTALL-ENTRY-SCRIPT: 'qrcode==7.3.1','console_scripts','qr'
 import re
 import sys
