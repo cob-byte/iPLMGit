@@ -25,7 +25,7 @@ class UserCreationForm(forms.ModelForm):
     
     class Meta:
         model = User
-        fields = ('email', 'firstName', 'middleName', 'lastName', 'is_student', 'is_faculty', 'is_chairperson', 'is_admin')
+        fields = ('email', 'email1' , 'firstName', 'middleName', 'lastName', 'is_student', 'is_faculty', 'is_chairperson', 'is_admin')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -69,7 +69,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'firstName', 'middleName',
+        fields = ('email', 'email1' , 'password', 'firstName', 'middleName',
                   'lastName', 'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
     
     def clean(self):
@@ -114,11 +114,11 @@ class UserAdmin(BaseUserAdmin):
      These override the definitions on the base UserAdmin
      that reference specific fields on auth.User.
      '''
-    list_display = ('email', 'firstName', 'middleName', 'lastName',
+    list_display = ('email', 'email1', 'firstName', 'middleName', 'lastName',
                     'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'email1', 'password')}),
         ('Personal info', {'fields': ('firstName', 'middleName', 'lastName')}),
         ('Permissions', {'fields': ('is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')}),
     )
@@ -127,7 +127,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('firstName', 'middleName', 'lastName', 'email', 'password1', 'password2',
+            'fields': ('email1', 'firstName', 'middleName', 'lastName', 'email', 'password1', 'password2',
                         'is_admin', 'is_chairperson', 'is_faculty', 'is_student'),
         }),
     )

@@ -51,14 +51,18 @@ class College(models.Model):
 
 # Base User Database
 class UserManager(BaseUserManager):
-    def create_user(self, email, firstName, middleName, lastName, password=None):
+    def create_user(self, email1, email, firstName, middleName, lastName, password=None):
         """
         Creates and saves a User with the given email, name, and password.
         """
         if not email:
             raise ValueError('Users must have an email address')
 
+        if not email1:
+            raise ValueError('Users must have an email address')
+
         user = self.model(
+            email1=self.normalize_email(email1),
             email=self.normalize_email(email),
             firstName=firstName,
             middleName=middleName,
@@ -69,12 +73,12 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, firstName, middleName, lastName, password=None):
+    def create_superuser(self, email1, email, firstName, middleName, lastName, password=None):
         """
         Creates and saves a superuser with the given email, name and password.
         """
         user = self.create_user(
-            email,
+            email1, email,
             password=password,
             firstName=firstName,
             middleName=middleName,
@@ -95,11 +99,18 @@ class User(AbstractBaseUser):
     )
 
     email = models.EmailField(
-        verbose_name='email address',validators=[email_regex],
+        verbose_name='PLM Email Address',validators=[email_regex],
         max_length=255,
         unique=True,
     )
     
+    email1 = models.EmailField(
+        verbose_name='Personal Email Address',
+        max_length=255,
+        unique=True,
+        default='email@gmail.com',
+    )
+
     firstName = models.CharField(max_length=100, verbose_name='First Name')
     middleName = models.CharField(max_length=100, blank=False, default=" ", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
@@ -114,10 +125,10 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['firstName', 'middleName', 'lastName']
+    REQUIRED_FIELDS = ['email1','firstName', 'middleName', 'lastName']
 
     def full_name(self):
-        return self.email, self.lastName, self.firstName, self.middleName
+        return self.email1, self.email, self.lastName, self.firstName, self.middleName
 
     def has_perm(self, perm, obj=None):
         """Does the user have a specific permission?"""
@@ -229,7 +240,7 @@ class FacultyInfo(models.Model):
 
     def fid_default():
         year = date.today().year
-        id = FacultyInfo.objects.latest('facultyUser_id')
+        id = 1
         fetch = str(id)
         final = fetch.split()[0].strip()
         f_id = int(final)
@@ -441,7 +452,7 @@ class StudentInfo(models.Model):
 
     def sid_default():
         year = date.today().year
-        id = StudentInfo.objects.latest('studentUser_id')
+        id = 1
         fetch = str(id)
         final = fetch.split()[0].strip()
         s_id = int(final)
