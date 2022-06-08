@@ -210,6 +210,13 @@ class FacultyInfoAdmin(admin.ModelAdmin):
 
     get_departmentID.short_description = 'Course'
 
+    def has_delete_permission(self, request, obj=None):
+        # Disable delete
+        return True
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
     list_filter = [('departmentID',RelatedDropdownFilter)]
 
 # STUDENT ADMIN
@@ -242,6 +249,13 @@ class StudentInfoAdmin(admin.ModelAdmin):
         return obj.studentUser.middleName
 
     get_mname.short_description = 'Middle Name'
+
+    def has_delete_permission(self, request, obj=None):
+        # Disable delete
+        return True
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
