@@ -497,21 +497,31 @@ class studentSchedulingCreationForm(forms.ModelForm):
                     'realsection')
 
     def clean(self):
-        # Get room, timeStart and timeEnd from user
+        # Get new room, timeStart and timeEnd from user        
         currentRoom = self.cleaned_data.get('room')
+        currentDay = self.cleaned_data.get('day')
         newTimeStart = self.cleaned_data.get('timeStart')
         newTimeEnd = self.cleaned_data.get('timeEnd')
-
         
-
-        
-            
-
-        
-
-        
-        
-        
+        # Query existing schedules        
+        if newTimeStart == newTimeEnd:
+            raise ValidationError("Time Start and Time End can't be the same.")
+        if newTimeStart > newTimeEnd:
+            raise ValidationError('Time Slot should not exceed within the day')
+       
+        # Check if there is an existing schedule on the timeField        
+        if studentScheduling.objects.filter(room=currentRoom, day=currentDay).count() > 0:
+            existingSchedules = studentScheduling.objects.filter( room=currentRoom, day=currentDay )
+           
+            for schedule in existingSchedules:
+                # Field Conflict Validations                 
+                if schedule.timeStart == newTimeStart:
+                        raise ValidationError('Time Start in that particular day and room is already occupied.')
+                if schedule.timeEnd == newTimeEnd:
+                        raise ValidationError('Time End in that particular day and room is already occupied.')
+                if newTimeStart >= schedule.timeStart and newTimeStart < schedule.timeEnd:
+                        raise ValidationError('Time Slot is already occupied')
+    
 
 # BLOCK SCHEDULING CHANGE FORM FOR VALIDATION
 class studentSchedulingChangeForm(forms.ModelForm):
@@ -531,10 +541,30 @@ class studentSchedulingChangeForm(forms.ModelForm):
                     'realsection')
 
     def clean(self):
-        # Get room, timeStart and timeEnd from user
+        # Get new room, timeStart and timeEnd from user        
         currentRoom = self.cleaned_data.get('room')
+        currentDay = self.cleaned_data.get('day')
         newTimeStart = self.cleaned_data.get('timeStart')
         newTimeEnd = self.cleaned_data.get('timeEnd')
+        
+        # Query existing schedules        
+        if newTimeStart == newTimeEnd:
+            raise ValidationError("Time Start and Time End can't be the same.")
+        if newTimeStart > newTimeEnd:
+            raise ValidationError('Time Slot should not exceed within the day')
+       
+        # Check if there is an existing schedule on the timeField        
+        if studentScheduling.objects.filter(room=currentRoom, day=currentDay).count() > 0:
+            existingSchedules = studentScheduling.objects.filter( room=currentRoom, day=currentDay )
+           
+            for schedule in existingSchedules:
+                # Field Conflict Validations                 
+                if schedule.timeStart == newTimeStart:
+                        raise ValidationError('Time Start in that particular day and room is already occupied.')
+                if schedule.timeEnd == newTimeEnd:
+                        raise ValidationError('Time End in that particular day and room is already occupied.')
+                if newTimeStart >= schedule.timeStart and newTimeStart < schedule.timeEnd:
+                        raise ValidationError('Time Slot is already occupied')
 
 #BLOCK SCHEDULING
 class studentSchedulingAdmin(admin.ModelAdmin):
