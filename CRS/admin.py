@@ -171,7 +171,7 @@ class ChairpersonInfoAdmin(admin.ModelAdmin):
 
 # FACULTY ADMIN
 class FacultyInfoAdmin(admin.ModelAdmin):
-    search_fields = ['facultyUser__id', 'facultyUser__email', 'facultyUser__firstName', 'facultyUser__lastName','facultyUser__middleName']
+    search_fields = ['facultyID', 'facultyUser__email', 'facultyUser__firstName', 'facultyUser__lastName','facultyUser__middleName']
     model = FacultyInfo
     list_display = ('get_id', 'get_email', 'get_lname', 'get_fname', 'get_mname', 'get_departmentID')
 
@@ -181,9 +181,9 @@ class FacultyInfoAdmin(admin.ModelAdmin):
     get_email.short_description = 'Email'
 
     def get_id(self, obj):
-        return obj.facultyUser.id
+        return obj.facultyID
 
-    get_id.short_description = 'ID'
+    get_id.short_description = 'Faculty ID'
 
     def get_fname(self, obj):
         return obj.facultyUser.firstName
@@ -210,13 +210,6 @@ class FacultyInfoAdmin(admin.ModelAdmin):
 
     get_departmentID.short_description = 'Course'
 
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return True
-
-    def has_add_permission(self, request, obj=None):
-        return False
-
     list_filter = [('departmentID',RelatedDropdownFilter)]
 
 # STUDENT ADMIN
@@ -231,9 +224,9 @@ class StudentInfoAdmin(admin.ModelAdmin):
     get_email.short_description = 'Email'
 
     def get_id(self, obj):
-        return obj.studentUser.id
+        return obj.studentID
 
-    get_id.short_description = 'ID'
+    get_id.short_description = 'Student ID'
 
     def get_fname(self, obj):
         return obj.studentUser.firstName
@@ -249,13 +242,6 @@ class StudentInfoAdmin(admin.ModelAdmin):
         return obj.studentUser.middleName
 
     get_mname.short_description = 'Middle Name'
-
-    def has_delete_permission(self, request, obj=None):
-        # Disable delete
-        return True
-
-    def has_add_permission(self, request, obj=None):
-        return False
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)

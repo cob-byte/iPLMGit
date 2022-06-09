@@ -90,8 +90,7 @@ class UserManager(BaseUserManager):
         return user
 
 
-class User(AbstractBaseUser):
-
+class User(AbstractBaseUser): 
     email_error_message = 'Email must be: @plm.edu.ph'
     email_regex = RegexValidator(
     regex=r'^[A-Za-z0-9._%+-]+@plm.edu.ph$',
@@ -108,11 +107,11 @@ class User(AbstractBaseUser):
         verbose_name='Personal Email Address',
         max_length=255,
         unique=True,
-        default='email@gmail.com',
+        default='example@gmail.com',
     )
 
     firstName = models.CharField(max_length=100, verbose_name='First Name')
-    middleName = models.CharField(max_length=100, blank=False, default=" ", verbose_name='Middle Name')
+    middleName = models.CharField(max_length=100, blank=True, default="", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
     
     is_active = models.BooleanField(default=True)
@@ -240,7 +239,11 @@ class FacultyInfo(models.Model):
 
     def fid_default():
         year = date.today().year
-        id = 1
+        check = FacultyInfo.objects.all()
+        if check.exists():
+            id = FacultyInfo.objects.latest('facultyUser_id')
+        else:
+            id = 1
         fetch = str(id)
         final = fetch.split()[0].strip()
         f_id = int(final)
@@ -277,8 +280,8 @@ class FacultyInfo(models.Model):
     facultyUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name='Faculty User')
     facultyID = models.CharField(validators=[facultyID_regex], max_length=50,
                                  unique=True, verbose_name='Faculty ID', null=True, default=fid_default)
-    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
-    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
+    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False, default=1)
+    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False, default=1)
     facultyWorkstatus = models.CharField(max_length=100, choices=WorkStatus_CHOICES,
                                          null=True, verbose_name='Work Status')
     facultyGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
@@ -452,7 +455,11 @@ class StudentInfo(models.Model):
 
     def sid_default():
         year = date.today().year
-        id = 1
+        check = StudentInfo.objects.all()
+        if check.exists():
+            id = StudentInfo.objects.latest('studentUser_id')
+        else:
+            id = 1
         fetch = str(id)
         final = fetch.split()[0].strip()
         s_id = int(final)
@@ -489,8 +496,8 @@ class StudentInfo(models.Model):
     studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')
     studentID = models.CharField(validators=[studentID_regex], max_length=50, unique=True, verbose_name='Student ID',
                                  null=True, default = sid_default)
-    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False)
-    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False)
+    collegeID = ForeignKey(College, null=True, verbose_name='College', on_delete=models.SET_NULL, blank=False, default=1)
+    departmentID = ForeignKey(Department, null=True, verbose_name='Department', on_delete=models.SET_NULL, blank=False, default=1)
     studentGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
     studentCitizenship = models.CharField(max_length=50, null=True,default='Filipino', verbose_name='Citizenship')
     studentCivilstatus = models.CharField(max_length=150, null=True, choices=CivilStatus_CHOICES,
