@@ -114,6 +114,7 @@ class User(AbstractBaseUser):
     middleName = models.CharField(max_length=100, blank=True, default="", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
     
+    email_status = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
@@ -446,8 +447,8 @@ class StudentInfo(models.Model):
         regex=r'^09\d{9}$',
         message=phone_error_message
     )
-    # Contact Number format code
-    curr_error_message = 'Contact number must be entered in format: 20XX'
+    # Curriculum Year format code
+    curr_error_message = 'Curriculum Year must be entered in format: 20XX'
     curr_regex = RegexValidator(
         regex=r'^20\d{2}$',
         message=curr_error_message
@@ -501,17 +502,17 @@ class StudentInfo(models.Model):
     studentGender = models.CharField(max_length=50, null=True, choices=Gender_CHOICES, verbose_name='Gender')
     studentCitizenship = models.CharField(max_length=50, null=True,default='Filipino', verbose_name='Citizenship')
     studentCivilstatus = models.CharField(max_length=150, null=True, choices=CivilStatus_CHOICES,
-                                          verbose_name='Civil Status')
+                                          verbose_name='Civil Status', default=1)
     studentContact = models.CharField(validators=[phone_regex], max_length=50, null=True, verbose_name='Contact Number')
     studentRegStatus = models.CharField(max_length=100, choices=Status_CHOICES, null=True,
                                         verbose_name='Student Status')
     studentType = models.CharField(max_length=150, null=True, choices=Type_CHOICES, verbose_name='Student Type')
-    studentCourse = models.CharField(max_length=50, null=True, verbose_name='Course')
+    studentCourse = models.CharField(max_length=50, null=True, verbose_name='Course', default='Bachelor of Science in ')
     studentYearlevel = models.CharField(max_length=150, null=True, choices=Year_CHOICES, verbose_name='Year Level')
     studentSection = models.ForeignKey(BlockSection, null=True, verbose_name='Section', on_delete=models.SET_NULL,
                                        blank=False)
     studentCurriculum = models.CharField(validators=[curr_regex], max_length=50, verbose_name='Curriculum Year',
-                                         null=True)
+                                         null=True, default= date.today().year)
 
     # advisoryClasscode = ForeignKey(advisoryClass, null=True, verbose_name='Class Advisory', on_delete=DO_NOTHING)
 

@@ -1,0 +1,12 @@
+{% autoescape off %}
+Dear Haribon:
+
+Your official iPLM account details are:
+
+iPLM Email Address: {{ iplmemail }}
+
+Password: {{ password }}
+
+The PLM Official email account will be used as your log in account to the iPLM Website
+{{ protocol }}://{{ domain }}
+{% endautoescape %}
