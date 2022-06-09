@@ -44,13 +44,13 @@ class UserCreationForm(forms.ModelForm):
             raise ValidationError('Please select at least one(1) permission before proceeding')
         
         if is_admin and is_student:
-            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+            raise ValidationError('You cannot apply both Admin and Student permission to a user.')
         
         if is_faculty and is_student:
             raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
 
         if is_chairperson and is_student:
-            raise ValidationError('You cannot apply both Student and Faculty permission to a user.')
+            raise ValidationError('You cannot apply both Chairperson and Student permission to a user.')
 
     def save(self, commit=True):
         # Save the provided password in hashed format
@@ -69,7 +69,7 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'email1' , 'password', 'firstName', 'middleName',
+        fields = ('email', 'email1', 'password', 'firstName', 'middleName',
                   'lastName', 'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
     
     def clean(self):
@@ -493,10 +493,69 @@ class crsGradeAdmin(admin.ModelAdmin):
 
 admin.site.register(crsGrade, crsGradeAdmin)
 
+# BLOCK SCHEDULING CREATION FORM FOR VALIDATION
+class studentSchedulingCreationForm(forms.ModelForm):
+    """A form for creating new schedules. Includes all the required
+    validation to prevent time collision in the same room."""
 
+    model = studentScheduling
+    list_display = ('get_id',
+                    'subjectCode',
+                    'section',
+                    'instructor',
+                    'day',
+                    'timeStart',
+                    'timeEnd',
+                    'room',
+                    'type',
+                    'realsection')
+
+    def clean(self):
+        # Get room, timeStart and timeEnd from user
+        currentRoom = self.cleaned_data.get('room')
+        newTimeStart = self.cleaned_data.get('timeStart')
+        newTimeEnd = self.cleaned_data.get('timeEnd')
+
+        
+
+        
+            
+
+        
+
+        
+        
+        
+
+# BLOCK SCHEDULING CHANGE FORM FOR VALIDATION
+class studentSchedulingChangeForm(forms.ModelForm):
+    """A form for updating existing schedules. Includes all the required
+    validation to prevent time collision in the same room."""
+
+    model = studentScheduling
+    list_display = ('get_id',
+                    'subjectCode',
+                    'section',
+                    'instructor',
+                    'day',
+                    'timeStart',
+                    'timeEnd',
+                    'room',
+                    'type',
+                    'realsection')
+
+    def clean(self):
+        # Get room, timeStart and timeEnd from user
+        currentRoom = self.cleaned_data.get('room')
+        newTimeStart = self.cleaned_data.get('timeStart')
+        newTimeEnd = self.cleaned_data.get('timeEnd')
 
 #BLOCK SCHEDULING
 class studentSchedulingAdmin(admin.ModelAdmin):
+
+    form = studentSchedulingChangeForm
+    add_form = studentSchedulingCreationForm
+
     model = studentScheduling
     list_display = ('get_id', 'subjectCode','section','instructor','day','timeStart','timeEnd','room','type','realsection')
 
@@ -536,7 +595,6 @@ class studentSchedulingAdmin(admin.ModelAdmin):
 
 admin.site.register(studentScheduling, studentSchedulingAdmin)
 admin.site.register(RoomInfo)
-
 
 # HD STUDENT APPLICANT
 class hdApplicantAdmin(admin.ModelAdmin):
