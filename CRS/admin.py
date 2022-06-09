@@ -126,7 +126,7 @@ def email(modeladmin, request, queryset):
             queryset.update(email_status=1)
             
         except:
-            return HttpResponse(email)
+            return HttpResponse("Auto-sending of E-mail Failed")
           
     
 email.short_description = "Send email to user about their account info"
