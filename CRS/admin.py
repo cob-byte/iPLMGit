@@ -112,20 +112,23 @@ def email(modeladmin, request, queryset):
         email1 = mail.email1
         password = mail.password
         subject = 'iPLM Offical Account'
-        email_template_name = 'admin/Account.txt'
+        email_template_name = "admin\Account.txt"
         parameters = {
             'iplmemail': iplm,
             'password': password,
             'domain': '127.0.0.1:8000',
             'site_name': 'iPLM',
-            'protocol': 'http',
+            'protocol': 'http'
         }
         email = render_to_string(email_template_name, parameters)
         try:
             send_mail(subject, email, EMAIL_HOST_USER, [email1], fail_silently=False)
+            queryset.update(email_status=1)
+            
         except:
-            return HttpResponse(request)
-        queryset.update(email_status=1)
+            return HttpResponse(email)
+          
+    
 email.short_description = "Send email to user about their account info"
 
 class UserAdmin(BaseUserAdmin):
