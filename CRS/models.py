@@ -11,6 +11,7 @@ from django.forms import ValidationError
 from django.utils import timezone
 from django.contrib import messages
 from datetime import date
+from django.core.validators import validate_email
 from dis import findlabels
 
 
@@ -92,13 +93,19 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser): 
     email_error_message = 'Email must be: @plm.edu.ph'
+    email_error_message_1 = 'Email must be: @plm.edu.ph'
     email_regex = RegexValidator(
     regex=r'^[A-Za-z0-9._%+-]+@plm.edu.ph$',
     message=email_error_message
     )
 
+    email_regex = RegexValidator(
+    regex=r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+',
+    message=email_error_message_1
+    )
+
     email = models.EmailField(
-        verbose_name='PLM Email Address',validators=[email_regex],
+        verbose_name='PLM Email Address', validators=[email_regex],
         max_length=255,
         unique=True,
     )
@@ -114,7 +121,7 @@ class User(AbstractBaseUser):
     middleName = models.CharField(max_length=100, blank=True, default="", verbose_name='Middle Name')
     lastName = models.CharField(max_length=100, verbose_name='Last Name')
     
-    email_status = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
     is_chairperson = models.BooleanField(default=False)
