@@ -99,11 +99,6 @@ class User(AbstractBaseUser):
     message=email_error_message
     )
 
-    email_regex = RegexValidator(
-    regex=r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+',
-    message=email_error_message_1
-    )
-
     email = models.EmailField(
         verbose_name='PLM Email Address', validators=[email_regex],
         max_length=255,
