@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-
+import re
 from iPLMver2.settings import EMAIL_HOST_USER
 from .models import *
 
@@ -54,8 +54,29 @@ class UserCreationForm(forms.ModelForm):
 
         if is_chairperson and is_student:
             raise ValidationError('You cannot apply both Chairperson and Student permission to a user.')
-
+    
+    def clean(self):
+        cleaned_data = super(UserCreationForm, self).clean()
+        return cleaned_data
+        
     def save(self, commit=True):
+        iplm = self.cleaned_data.get('email')
+        email1 = self.cleaned_data.get('email1')
+        password = self.cleaned_data.get('password1')
+        subject = 'iPLM Offical Account'
+        email_template_name = "admin\Account.txt"
+        parameters = {
+            'iplmemail': iplm,
+            'password': password,
+            'domain': '127.0.0.1:8000',
+            'site_name': 'iPLM',
+            'protocol': 'http'
+        }
+        email = render_to_string(email_template_name, parameters)
+        try:
+            send_mail(subject, email, EMAIL_HOST_USER, [email1], fail_silently=False)
+        except:
+            raise ValidationError("Auto-sending of E-mail Failed")
         # Save the provided password in hashed format
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
@@ -106,31 +127,6 @@ class StudentInfoInline(admin.StackedInline):
     verbose_name_plural = 'Student Profile'
     fk_name = 'studentUser'
 
-def email(modeladmin, request, queryset):
-    for mail in queryset:
-        iplm = mail.email
-        email1 = mail.email1
-        password = mail.password
-        subject = 'iPLM Offical Account'
-        email_template_name = "admin\Account.txt"
-        parameters = {
-            'iplmemail': iplm,
-            'password': password,
-            'domain': '127.0.0.1:8000',
-            'site_name': 'iPLM',
-            'protocol': 'http'
-        }
-        email = render_to_string(email_template_name, parameters)
-        try:
-            send_mail(subject, email, EMAIL_HOST_USER, [email1], fail_silently=False)
-            queryset.update(email_status=1)
-            
-        except:
-            return HttpResponse("Auto-sending of E-mail Failed")
-          
-    
-email.short_description = "Send email to user about their account info"
-
 class UserAdmin(BaseUserAdmin):
     # The forms to add and change user instances
     form = UserChangeForm
@@ -142,8 +138,8 @@ class UserAdmin(BaseUserAdmin):
      These override the definitions on the base UserAdmin
      that reference specific fields on auth.User.
      '''
-    list_display = ('email', 'firstName', 'lastName',
-                    'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student', 'email_status')
+    list_display = ('email', 'firstName', 'middleName', 'lastName',
+                    'is_active', 'is_admin', 'is_chairperson', 'is_faculty', 'is_student')
     list_filter = ('is_admin',)
     fieldsets = (
         (None, {'fields': ('email', 'email1', 'password')}),
@@ -161,7 +157,6 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ('email', 'firstName', 'lastName')
     ordering = ('-id',)
-    actions = [email]
     filter_horizontal = ()
 
 
