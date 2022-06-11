@@ -4,9 +4,8 @@ Dear Haribon:
 Your official iPLM account details are:
 
 iPLM Email Address: {{ iplmemail }}
-
 Password: {{ password }}
 
-The PLM Official email account will be used as your log in account to the iPLM Website
-{{ protocol }}://{{ domain }}
+Please log in to the iPLM Website as soon as possible to change the initial password as this email account will be used in the future as your log in credentials.
+Here is the link to the iPLM Website: {{ protocol }}://{{ domain }}
 {% endautoescape %}
