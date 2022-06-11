@@ -64,7 +64,7 @@ class UserCreationForm(forms.ModelForm):
         email1 = self.cleaned_data.get('email1')
         password = self.cleaned_data.get('password1')
         subject = 'iPLM Offical Account'
-        email_template_name = "admin\Account.txt"
+        email_template_name = "admin\initial_password_notice.txt"
         parameters = {
             'iplmemail': iplm,
             'password': password,
