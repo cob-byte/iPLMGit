@@ -14,6 +14,7 @@ from datetime import date
 from django.core.validators import validate_email
 from dis import findlabels
 
+from .validators import validate_file_extension
 
 import datetime
 import os
@@ -527,12 +528,12 @@ class StudentInfo(models.Model):
 # HD Application
 class hdApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=False)
-    studentDropform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Drop Form")
-    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Clearance Form")
-    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Transfer Certificate")
-    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student HD Letter")
-    studentGrades = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student Grades")
-    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=False, null=True, verbose_name="Student\'s Parent Signature")
+    studentDropform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student Drop Form")
+    studentClearanceform = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student Clearance Form")
+    studentTransfercert = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student Transfer Certificate")
+    studentHdletter = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student HD Letter")
+    studentGrades = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student Grades")
+    stdParentsig = models.FileField(upload_to='hdSubmission/', blank=False, null=True, validators=[validate_file_extension], verbose_name="Student\'s Parent Signature")
     remarks = models.CharField(default="Submitted", max_length=25)
     comment = models.TextField(max_length=150, null=True, blank=False, verbose_name="Feedback")
     hd_dateSubmitted = models.DateField(default=now, verbose_name="HD Date Submitted")
@@ -548,13 +549,13 @@ class hdApplicant(models.Model):
 # OJT Application
 class OjtApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    ojtResume = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Resume')
-    ojtRecLetter = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Recommended Letter')
-    ojtWaiver = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name=' OJT Waiver')
-    ojtAcceptForm = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Accept Form')
-    ojtCompanyProfile = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Company Profile')
-    ojtCompanyId = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Company ID')
-    ojtMedcert = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, verbose_name='OJT Medical Certificate')
+    ojtResume = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Resume')
+    ojtRecLetter = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Recommended Letter')
+    ojtWaiver = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name=' OJT Waiver')
+    ojtAcceptForm = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Accept Form')
+    ojtCompanyProfile = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Company Profile')
+    ojtCompanyId = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Company ID')
+    ojtMedcert = models.FileField(upload_to='ojtSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='OJT Medical Certificate')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     comment = models.TextField(max_length=150, null=True, blank=True, verbose_name='Feedback')
     ojt_dateSubmitted = models.DateField(default=now, verbose_name='OJT Date Submitted')
@@ -582,11 +583,11 @@ class spApplicant(models.Model):
 
 class LOAApplicant(models.Model):
     studentID = models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE, blank=True)
-    studentLOAClearanceform = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Clearance Form')
-    studentStudyplan = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student Study Plan')
-    studentLOAletter = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Letter')
-    studentLOAFORM = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student LOA Form')
-    studentChecklist = models.FileField(upload_to='LOASubmission/', blank=True, null=True, verbose_name='Student Checklist')
+    studentLOAClearanceform = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student LOA Clearance Form')
+    studentStudyplan = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Study Plan')
+    studentLOAletter = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student LOA Letter')
+    studentLOAFORM = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student LOA Form')
+    studentChecklist = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Checklist')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     comment = models.TextField(null=True, blank=True, verbose_name='Feedback')
     LOA_dateSubmitted = models.DateField(default=now, verbose_name='LOA Date Submitted')
@@ -645,7 +646,7 @@ class currchecklist(models.Model):
 
 class crsGrade(models.Model):
     studentID =  models.ForeignKey(StudentInfo, null=True, verbose_name='Student', on_delete=models.CASCADE,blank=True)
-    crsFile = models.FileField(upload_to='crsSubmission/', blank=True, null=True, verbose_name='CRS File')
+    crsFile = models.FileField(upload_to='crsSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='CRS File')
     comment = models.TextField(null=True, blank=True, verbose_name='Feedback')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
@@ -752,7 +753,7 @@ class loaForm(models.Model):
 
 # HD Dropping Form
 class HD_DroppingForm(models.Model):
-    Admin_Upload = models.FileField(upload_to='Student/Dropping Form')
+    Admin_Upload = models.FileField(upload_to='Student/Dropping Form', validators=[validate_file_extension])
 
     @property
     def filename(self):
@@ -775,9 +776,9 @@ class ShifterApplicant(models.Model):
     mname = models.CharField(max_length=100, verbose_name="Middle Name", null=True)
     eadd = models.CharField(max_length=100, verbose_name="Email Address", null=True)
     cnum = models.CharField(max_length=100, verbose_name="Contact Number", null=True)
-    studentStudyplan = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Study Plan')
-    studentshifterletter = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Shifter Letter')
-    studentGrade = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, verbose_name='Student Grades')
+    studentStudyplan = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Study Plan')
+    studentshifterletter = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Shifter Letter')
+    studentGrade = models.FileField(upload_to='ShifterSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Grades')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     shifter_dateSubmitted = models.DateField(default=now, verbose_name='Shifter Date Submitted')
     signature1 = models.ImageField(upload_to='ShifterSign/', null=True, blank=True, verbose_name='First Signature')
@@ -800,11 +801,11 @@ class TransfereeApplicant(models.Model):
     mname = models.CharField(max_length=100, verbose_name="Middle Name", null=True)
     eadd = models.CharField(max_length=100, verbose_name="Email Address", null=True)
     cnum = models.CharField(max_length=100, verbose_name="Contact Number", null=True)
-    studentStudyplan = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Study Plan')
-    studentNote = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Note')
-    studentHD = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student HD')
-    studentGoodmoral = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Good Moral')
-    studentGrade = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, verbose_name='Student Grade')
+    studentStudyplan = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Study Plan')
+    studentNote = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Note')
+    studentHD = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student HD')
+    studentGoodmoral = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Good Moral')
+    studentGrade = models.FileField(upload_to='TransfereeSubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Grade')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
     transfer_dateSubmitted = models.DateField(default=now, verbose_name='Tranfer Date Submitted')
     signature1 = models.ImageField(upload_to='TransfereeSign/', null=True, blank=True, verbose_name='First Signature')
@@ -868,10 +869,10 @@ class FacultyApplicant(models.Model):
     email = models.EmailField()
     phoneNumber = models.CharField(validators=[phone_regex], max_length=150, verbose_name='Phone Number')
     department = models.CharField(max_length=100, verbose_name="Department", null=True)
-    CV = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, verbose_name='Curriculum Vitae')
-    certificates = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
-    credentials = models.FileField(upload_to='facultyApplicant/', blank=True, null=True)
-    TOR = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, verbose_name='Transcripts of Records')
+    CV = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Curriculum Vitae')
+    certificates = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, validators=[validate_file_extension])
+    credentials = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, validators=[validate_file_extension])
+    TOR = models.FileField(upload_to='facultyApplicant/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Transcripts of Records')
     remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
 
     class Meta:
