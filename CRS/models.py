@@ -509,7 +509,7 @@ class StudentInfo(models.Model):
     studentRegStatus = models.CharField(max_length=100, choices=Status_CHOICES, null=True,
                                         verbose_name='Student Status')
     studentType = models.CharField(max_length=150, null=True, choices=Type_CHOICES, verbose_name='Student Type')
-    studentCourse = models.CharField(max_length=50, null=True, verbose_name='Course', default='Bachelor of Science in ')
+    studentCourse = models.CharField(max_length=50, null=True, verbose_name='Course', default='BSIT')
     studentYearlevel = models.CharField(max_length=150, null=True, choices=Year_CHOICES, verbose_name='Year Level')
     studentSection = models.ForeignKey(BlockSection, null=True, verbose_name='Section', on_delete=models.SET_NULL,
                                        blank=False)
@@ -522,7 +522,7 @@ class StudentInfo(models.Model):
         verbose_name_plural = "Student Information"
     
     def __str__(self):
-        return '%s - %s' %(self.studentUser.id, self.studentID)
+        return '%s' %(self.studentID)
 
 
 # HD Application
@@ -588,7 +588,8 @@ class LOAApplicant(models.Model):
     studentLOAletter = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student LOA Letter')
     studentLOAFORM = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student LOA Form')
     studentChecklist = models.FileField(upload_to='LOASubmission/', blank=True, null=True, validators=[validate_file_extension], verbose_name='Student Checklist')
-    remarks = models.CharField(max_length=150, default='Submitted', verbose_name='Status')
+    remarks = models.CharField(max_length=150, default='Submitted')
+    status = models.CharField(max_length=150, default='Pending')
     comment = models.TextField(null=True, blank=True, verbose_name='Feedback')
     LOA_dateSubmitted = models.DateField(default=now, verbose_name='LOA Date Submitted')
     signature1 = models.ImageField(upload_to='LOASign/', null=True, blank=True, verbose_name='First Signature')

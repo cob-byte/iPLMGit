@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from django.contrib import messages
 import re
 from iPLMver2.settings import EMAIL_HOST_USER
 from .models import *
@@ -746,15 +747,77 @@ class spApplicantAdmin(admin.ModelAdmin):
 
 admin.site.register(spApplicant, spApplicantAdmin)
 
+def deactivate(modeladmin, request, queryset):
+    for student in queryset:
+        countd = 0
+        counts = 0
+        if student.status == 'Deactivated':
+            countd += 1
+        else:
+            affected = User.objects.filter(email=student.studentID.studentUser.email).update(is_active=False)
+            student.status = 'Deactivated'
+            student.save()
+
+            iplm = student.studentID.studentUser.email
+            email1 = student.studentID.studentUser.email1
+            subject = 'iPLM Account Deactivation Notice'
+            email_template_name = 'admin/deactivation_notice.txt'
+            parameters = {
+                'domain': '127.0.0.1:8000',
+                'site_name': 'iPLM',
+                'protocol': 'http',
+            }
+            email = render_to_string(email_template_name, parameters)
+            try:
+                send_mail(subject, email, EMAIL_HOST_USER, [email1], fail_silently=False)
+                send_mail(subject, email, EMAIL_HOST_USER, [iplm], fail_silently=False)
+                counts += 1
+            except:
+                messages.error(request, ("An error has occured, please check the plm/personal email of ", student.studentID, "."))
+    if countd > 0:
+        messages.error(request, "One of the Selected Accounts is already Deactivated.")
+    if counts > 0:
+        messages.success(request, "The selected students' account were successfuly Deactivated.")
+deactivate.short_description = "Deactivate Account"
+
+def reactivate(modeladmin, request, queryset):
+    for student in queryset:
+        countr = 0
+        counts = 0
+        if student.status == 'Reactivated':
+            countr += 1
+        else:
+            affected = User.objects.filter(email=student.studentID.studentUser.email).update(is_active=True)
+            student.status = 'Reactivated'
+            student.save()
+
+            iplm = student.studentID.studentUser.email
+            email1 = student.studentID.studentUser.email1
+            subject = 'iPLM Account Reactivation Notice'
+            email_template_name = 'admin/reactivation_notice.txt'
+            parameters = {
+                'domain': '127.0.0.1:8000',
+                'site_name': 'iPLM',
+                'protocol': 'http',
+            }
+            email = render_to_string(email_template_name, parameters)
+            try:
+                send_mail(subject, email, EMAIL_HOST_USER, [email1], fail_silently=False)
+                send_mail(subject, email, EMAIL_HOST_USER, [iplm], fail_silently=False)
+                counts += 1
+            except:
+                messages.error(request, ("An error has occured, please check the plm/personal email of ", student.studentID, "."))
+    if countr > 0:
+        messages.error(request, "One of the Selected Accounts is already Reactivated.")
+    if counts > 0:
+        messages.success(request, "The selected students' account were successfuly Reactivated.")
+reactivate.short_description = "Reactivate Account"
 
 # LOA STUDENT APPLICANT
 class LOAApplicantAdmin(admin.ModelAdmin):
-    search_fields = ['studentID__studentID']
+    search_fields = ['studentID__studentID', 'studentID__studentRegStatus']
     model = LOAApplicant
-    list_display = ('get_id','course','studentID','FirstName','MiddleName','LastName','status','Applicationstatus')
-
-    def get_id(self, obj):
-        return obj.id
+    list_display = ('studentID','course','FirstName','MiddleName','LastName','StudentStatus','Applicationstatus','status', 'is_active')
 
     def course(self, obj):
         return obj.studentID.studentCourse
@@ -771,14 +834,26 @@ class LOAApplicantAdmin(admin.ModelAdmin):
     def LastName(self, obj):
         return obj.studentID.studentUser.lastName
 
-    def status(self, obj):
+    def StudentStatus(self, obj):
         return obj.studentID.studentRegStatus
+
+    StudentStatus.short_description = 'Student Status'
 
     def Applicationstatus(self, obj):
         return obj.remarks
+    
+    Applicationstatus.short_description = 'Application Status'
 
-    list_filter = [('studentID',RelatedDropdownFilter),('studentID__studentCourse',DropdownFilter),('remarks',DropdownFilter)]
+    def status(self,obj):
+        return obj.status
+    
+    status.short_description = 'Status'
 
+    def is_active(self, obj):
+        return obj.studentID.studentUser.is_active
+
+    list_filter = [('studentID',RelatedDropdownFilter),('studentID__studentCourse',DropdownFilter),('remarks',DropdownFilter),('status',DropdownFilter)]
+    actions = [deactivate, reactivate]
 admin.site.register(LOAApplicant, LOAApplicantAdmin)
 
 

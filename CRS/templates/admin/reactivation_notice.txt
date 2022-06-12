@@ -7,4 +7,4 @@ Click on the link {{ protocol }}://{{ domain }} to be redirected to the iPLM Web
 
 
 Thank you.
-{ %endautoescape% }
+{% endautoescape %}
