@@ -175,7 +175,6 @@ class AcademicYearInfo(models.Model):
     def __str__(self):
         return '%s - %s' % (self.yearstarted, self.yearended)
 
-
 # ------------------ Chairperson Database----------------------------------------------------
 class ChairpersonInfo (models.Model):
     cpersonUser = OneToOneField(User, on_delete=models.CASCADE, primary_key=True, verbose_name="Chairperson User")
@@ -493,7 +492,7 @@ class StudentInfo(models.Model):
             finalStudentID = str(year) + stringOverOneThousand + lengthOfRawStudentId(lengthStudentId, stringStudentID)
         else:
             finalStudentID = str(year) + stringOverOneThousand + lengthOfRawStudentId(lengthStudentId, stringStudentID)
-        
+            
         return finalStudentID
 
     studentUser = OneToOneField(User, on_delete=CASCADE, primary_key=True, verbose_name='Student Email')

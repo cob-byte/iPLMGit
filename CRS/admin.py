@@ -304,7 +304,13 @@ class AcademicYearInfoAdmin(admin.ModelAdmin):
         return True
 
     def has_add_permission(self, request, obj=None):
-        return False
+        check = AcademicYearInfo.objects.all()
+        if check.exists():
+            return False
+        else:
+            return True
+
+
 
 admin.site.register(AcademicYearInfo, AcademicYearInfoAdmin)
 
